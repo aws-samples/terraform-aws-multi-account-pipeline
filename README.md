@@ -1,4 +1,4 @@
-# multi-account-pipeline
+# terraform-multi-account-pipeline
 
 Deploy terraform to multiple AWS accounts.
 
