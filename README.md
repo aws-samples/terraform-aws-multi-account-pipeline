@@ -1,6 +1,6 @@
 # multi-account-pipeline
 
-Deploy terraform to multiple AWS accounts. 
+Deploy terraform to multiple AWS accounts.
 
 ## Prerequisites
 - An existing AWS CodeCommit repository ("your repo"); *or*
@@ -29,8 +29,8 @@ Segregation enables the pipeline to run commands against the code in "your repo"
 AWS CodeCommit: 
 ```hcl
 module "pipeline" {
-  source        = ""
-  pipeline_name = ""
+  source        = "github.com/aws-samples/terraform-multi-account-pipeline"
+  pipeline_name = "pipeline"
   repo          = aws_repository.this.repository_name
   accounts      = {
     "workload1" = "112233445566"
@@ -60,7 +60,7 @@ module "pipeline" {
 
 `connection` is the connection arn of the [connection](https://docs.aws.amazon.com/dtconsole/latest/userguide/welcome-connections.html) to the third-party repo. 
 
-### Optional inputs
+### Optional Inputs
 
 ```hcl
 module "pipeline" {
