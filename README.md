@@ -133,10 +133,7 @@ Checkov skips can be used where Checkov policies conflict with your organization
 
 ## Related Resources
 
-- [AWS CodePipeline User Guide](https://docs.aws.amazon.com/codepipeline/latest/userguide/welcome.html)
-- [Resource: aws_repository](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/repository)
-- [Resource: aws_codebuild_project](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/codebuild_project)
-- [Resource: aws_codepipeline](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/codepipeline)
+- [aws-terraform-pipeline](https://github.com/aws-samples/aws-terraform-pipeline)
 
 ## Security
 
