@@ -46,8 +46,8 @@ module "pipeline" {
 Third-party service:
 ```hcl
 module "pipeline" {
-  source        = ""
-  pipeline_name = ""
+  source        = "github.com/aws-samples/terraform-multi-account-pipeline"
+  pipeline_name = "pipeline"
   repo          = "organization/repo"
   connection    = aws_codestarconnections_connection.this.arn
   accounts      = {
