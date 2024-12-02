@@ -3,11 +3,12 @@
 Deploy terraform to multiple AWS accounts.
 
 ## Prerequisites
-- An existing AWS CodeCommit repository ("your repo"); *or*
+- An existing AWS CodeCommit repository; *or*
 - An existing [AWS CodeConnection connection](https://docs.aws.amazon.com/dtconsole/latest/userguide/welcome-connections.html) to the third-party source of your choice (GitHub, Gitlab, etc)
 - [Remote state](https://developer.hashicorp.com/terraform/language/state/remote) that the pipeline can access (using the codebuild execution IAM role)
-- A cross-account IAM role in the target accounts, that can be assumed by the pipeline
-
+- A cross-account IAM role in the target accounts, that can be assumed by the pipeline. 
+- Your code must be compatible with the pipeline's use of [Terraform Workspaces](https://developer.hashicorp.com/terraform/language/state/workspaces). Review the [example code directory](./example_code) and ensure your code is compatible. 
+ 
 ## Deployment
 
 This module must be deployed to a separate repository.
@@ -25,7 +26,13 @@ pipeline repo
 
 Segregation enables the pipeline to run commands against the code in "your repo" without affecting the pipeline infrastructure. Typically this could be an infrastructure or bootstrap repo for the AWS account thats used to provision infrastructure and/or multiple pipelines.
 
-## Module inputs
+## Example Code ("Your Repo"):w
+
+The code in your repo will need to be compatible with the pipeline's use of [Terraform Workspaces](https://developer.hashicorp.com/terraform/language/state/workspaces).
+
+Review the [example code directory](./example_code) and ensure your code is compatible. 
+
+## Module Inputs
 AWS CodeCommit: 
 ```hcl
 module "pipeline" {
@@ -90,7 +97,8 @@ module "pipeline" {
 
 `environment_variables` can be used to define terraform and [tf_lint](https://github.com/terraform-linters/tflint) versions. 
 
-`checkov_skip` defines [Checkov](https://www.checkov.io/) skips for the pipeline. This is useful for organization-wide policies, removing the need to add individual resource skips. 
+`checkov_skip` defines [Checkov](https://www.checkov.io/) skips for the pipeline. This is useful for organization-wide policies, removing the need to add individual resource skips.
+
 
 ## Architecture
 
@@ -100,7 +108,6 @@ module "pipeline" {
 2. The pipeline validates the code and then runs a terraform plan against all of the target AWS accounts. Manual approval is then required to run the terraform apply. 
 3. Resources are deployed to the target AWS accounts using [Terraform Workspaces](https://developer.hashicorp.com/terraform/language/state/workspaces). Each AWS account is assigned their own Workspace using their AWS Account ID. 
 4. Artifacts and logs are exported to Amazon S3 and CloudWatch logs.
-
 
 ## Troubleshooting
 
@@ -113,7 +120,6 @@ module "pipeline" {
 | Pipeline fails on apply with `the action failed because no branch named main was found ...` | Either nothing has been committed to the repo or the branch is incorrect (Eg using `Master` not `Main`). Either commit to the Main branch or change the module input to fix this. |
 | `Invalid count argument` for `aws_s3_bucket_server_side_encryption_configuration` | The AWS KMS key must exist before the pipeline is created. If you create both at the same time, there is a dependency issue. |
 | Unable to find state file | Check state storage :env > AWS Account ID > backend key |
-
 
 ## Best Practices
 
