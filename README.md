@@ -62,6 +62,8 @@ module "pipeline" {
 
 `repo` is the name of your existing repo that the pipeline will use as a source. If you are using a third-party service, the format is "my-organization/repo"  
 
+`accounts` is a map of the target AWS accounts. 
+
 `connection` is the connection arn of the [connection](https://docs.aws.amazon.com/dtconsole/latest/userguide/welcome-connections.html) to the third-party repo. 
 
 ### Optional Inputs
