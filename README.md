@@ -3,8 +3,7 @@
 Deploy terraform to multiple AWS accounts.
 
 ## Prerequisites
-- An existing AWS CodeCommit repository; *or*
-- An existing [AWS CodeConnection connection](https://docs.aws.amazon.com/dtconsole/latest/userguide/welcome-connections.html) to the third-party source of your choice (GitHub, Gitlab, etc)
+- An existing AWS CodeCommit repository *OR* an [AWS CodeConnection connection](https://docs.aws.amazon.com/dtconsole/latest/userguide/welcome-connections.html) to the third-party source and repo of your choice (GitHub, Gitlab, etc)
 - [Remote state](https://developer.hashicorp.com/terraform/language/state/remote) that the pipeline can access (using the codebuild execution IAM role)
 - A cross-account IAM role in the target accounts, that can be assumed by the pipeline. 
 - Your code must be compatible with the pipeline's use of [Terraform Workspaces](https://developer.hashicorp.com/terraform/language/state/workspaces). Review the [example code directory](./example-code) and ensure your code is compatible. 
