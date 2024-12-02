@@ -18,7 +18,7 @@ resource "aws_s3_bucket" "baz" {
 
 # complex parameters
 
-resource "aws_route_table" "routable" {
+resource "aws_route_table" "this" {
   vpc_id = "vpc"
 
   route {
@@ -30,3 +30,11 @@ resource "aws_route_table" "routable" {
     Owner = local.config.owner
   }
 }
+
+# conditionals
+
+resource "aws_s3_bucket" "that" {
+  count  = var.account_id == "112233445566" ? 1 : 0
+  bucket = "conditional-bucket-${var.account_id}"
+}
+
