@@ -3,6 +3,8 @@
 
 # local.config can be used to reference specific values for each AWS account
 # eg local.config.cidr
+# you can use account_id or account_name in config.auto.tfvars
 locals {
-  config = var.config[var.account_id]
+  config = var.config[try(var.account_id, var.account_name)]
+
 }
