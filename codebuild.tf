@@ -46,10 +46,10 @@ module "apply" {
 
 resource "aws_iam_role" "codebuild" {
   name               = "${var.pipeline_name}-codebuild"
-  assume_role_policy = data.aws_iam_policy_document.codebuild_assume_role.json
+  assume_role_policy = data.aws_iam_policy_document.codebuild_assume.json
 }
 
-data "aws_iam_policy_document" "codebuild_assume_role" {
+data "aws_iam_policy_document" "codebuild_assume" {
   statement {
     effect  = "Allow"
     actions = ["sts:AssumeRole"]
@@ -69,14 +69,13 @@ data "aws_iam_policy_document" "codebuild_assume_role" {
   }
 }
 
-
 resource "aws_iam_role_policy_attachment" "codebuild" {
   role       = aws_iam_role.codebuild.name
-  policy_arn = aws_iam_policy.codebuild.arn
+  policy_arn = var.codebuild_policy == null ? aws_iam_policy.codebuild.arn : var.codebuild_policy
 }
 
 resource "aws_iam_policy" "codebuild" {
-  name   = "${var.pipeline_name}-codebuild"
+  name   = aws_iam_role.codebuild.name
   policy = data.aws_iam_policy_document.codebuild.json
 }
 

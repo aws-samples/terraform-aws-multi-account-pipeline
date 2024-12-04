@@ -48,3 +48,8 @@ variable "detect_changes" {
   type    = string
   default = false
 }
+
+variable "codebuild_policy" {
+  type    = string
+  default = null
+}
