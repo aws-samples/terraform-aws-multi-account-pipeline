@@ -16,6 +16,14 @@ phases:
       - terraform workspace select -or-create ${WORKSPACE}
       - terraform apply -auto-approve
 
+      - |
+        if [ -z "${WORKSPACE_DIRECTORY}" ]; then 
+          terraform apply -auto-approve
+        else
+          terraform apply -auto-approve -var-file=${WORKSPACE_DIRECTORY}/${WORKSPACE}.tfvars 
+        fi
+
+
   post_build:
     commands:
       - echo "apply complete"

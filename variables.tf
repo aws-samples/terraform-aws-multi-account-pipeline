@@ -23,6 +23,12 @@ variable "environment_variables" {
   }
 }
 
+variable "checkov_skip" {
+  description = "list of checkov checks to skip"
+  type        = list(string)
+  default     = [""]
+}
+
 variable "accounts" {
   description = "list of accounts to deploy to"
   type        = map(string)

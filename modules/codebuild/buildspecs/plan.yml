@@ -14,7 +14,13 @@ phases:
       - cd "$CODEBUILD_SRC_DIR"
       - terraform init -lock=false -input=false
       - terraform workspace select -or-create ${WORKSPACE}
-      - terraform plan 
+
+      - |
+        if [ -z "${WORKSPACE_DIRECTORY}" ]; then 
+          terraform plan
+        else
+          terraform plan -var-file=${WORKSPACE_DIRECTORY}/${WORKSPACE}.tfvars 
+        fi
 
   post_build:
     commands:
