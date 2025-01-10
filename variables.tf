@@ -59,3 +59,8 @@ variable "codebuild_policy" {
   type    = string
   default = null
 }
+
+variable "workspace_directory" {
+  type    = string
+  default = ""
+}

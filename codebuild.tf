@@ -20,7 +20,9 @@ module "plan" {
   environment_variables = merge(tomap({
     TF_VAR_account_name = each.key,
     TF_VAR_account_id   = each.value,
-    WORKSPACE = each.value }),
+    WORKSPACE           = each.value,
+    WORKSPACE_DIRECTORY = var.workspace_directory
+    }),
     var.environment_variables
   )
   build_timeout = 10
@@ -36,7 +38,9 @@ module "apply" {
   environment_variables = merge(tomap({
     TF_VAR_account_name = each.key,
     TF_VAR_account_id   = each.value,
-    WORKSPACE = each.value }),
+    WORKSPACE           = each.value
+    WORKSPACE_DIRECTORY = var.workspace_directory
+    }),
     var.environment_variables
   )
   build_timeout = 60
