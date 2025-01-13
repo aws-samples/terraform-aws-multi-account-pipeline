@@ -2,8 +2,10 @@
 // SPDX-License-Identifier: MIT-0
 
 resource "aws_codepipeline" "this" {
-  name     = var.pipeline_name
-  role_arn = aws_iam_role.codepipeline.arn
+  name           = var.pipeline_name
+  pipeline_type  = "V2"
+  role_arn       = aws_iam_role.codepipeline_role.arn
+  execution_mode = "QUEUED"
 
   artifact_store {
     location = aws_s3_bucket.this.id
