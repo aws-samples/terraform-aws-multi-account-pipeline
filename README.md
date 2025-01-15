@@ -77,6 +77,7 @@ module "pipeline" {
   access_logging_bucket = aws_s3_bucket.this.id
   workspace_directory   = "workspaces"
 
+  codebuild_timeout     = 60
   environment_variables = {
     TF_VERSION     = "1.5.7"
     TFLINT_VERSION = "0.33.0"
@@ -98,6 +99,8 @@ module "pipeline" {
 `workspace_directory` enables the use of workspace variable files (eg ./workspaces/<workspace>.tfvars. The input is the directory name that you wish to use. 
 
 `environment_variables` can be used to define terraform and [tf_lint](https://github.com/terraform-linters/tflint) versions. 
+
+`codebuild_timeout` alters the CodeBuild project timeout (in minutes). 
 
 `checkov_skip` defines [Checkov](https://www.checkov.io/) skips for the pipeline. This is useful for organization-wide policies, removing the need to add individual resource skips.
 

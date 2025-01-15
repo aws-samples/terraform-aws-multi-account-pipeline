@@ -1,10 +1,13 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: MIT-0
 
+# default variable management 
+
 # config is used to reference specific values for each AWS account
 # eg deploy a different cidr range to each AWS account
 # use it with local.config
 # # eg local.config.cidr
+
 config = {
   "112233445566" = {
     owner = "alice"

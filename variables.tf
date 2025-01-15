@@ -64,3 +64,8 @@ variable "workspace_directory" {
   type    = string
   default = ""
 }
+
+variable "codebuild_timeout" {
+  type    = number
+  default = 60
+}

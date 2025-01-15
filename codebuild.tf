@@ -25,7 +25,7 @@ module "plan" {
     }),
     var.environment_variables
   )
-  build_timeout = 10
+  build_timeout = var.codebuild_timeout
   build_spec    = "plan.yml"
   log_group     = local.log_group
 }
@@ -43,7 +43,7 @@ module "apply" {
     }),
     var.environment_variables
   )
-  build_timeout = 60
+  build_timeout = var.codebuild_timeout
   build_spec    = "apply.yml"
   log_group     = local.log_group
 }
