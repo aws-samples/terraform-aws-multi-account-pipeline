@@ -13,35 +13,23 @@ module "validation" {
 }
 
 module "plan" {
-  for_each       = var.accounts
-  source         = "./modules/codebuild"
-  codebuild_name = lower("${var.pipeline_name}-plan-${each.key}")
-  codebuild_role = aws_iam_role.codebuild.arn
-  environment_variables = merge(tomap({
-    TF_VAR_account_name = each.key,
-    TF_VAR_account_id   = each.value,
-    WORKSPACE = each.value }),
-    var.environment_variables
-  )
-  build_timeout = 10
-  build_spec    = "plan.yml"
-  log_group     = local.log_group
+  source                = "./modules/codebuild"
+  codebuild_name        = lower("${var.pipeline_name}-plan")
+  codebuild_role        = aws_iam_role.codebuild.arn
+  environment_variables = var.environment_variables
+  build_timeout         = 10
+  build_spec            = "plan.yml"
+  log_group             = local.log_group
 }
 
 module "apply" {
-  for_each       = var.accounts
-  source         = "./modules/codebuild"
-  codebuild_name = lower("${var.pipeline_name}-apply-${each.key}")
-  codebuild_role = aws_iam_role.codebuild.arn
-  environment_variables = merge(tomap({
-    TF_VAR_account_name = each.key,
-    TF_VAR_account_id   = each.value,
-    WORKSPACE = each.value }),
-    var.environment_variables
-  )
-  build_timeout = 60
-  build_spec    = "apply.yml"
-  log_group     = local.log_group
+  source                = "./modules/codebuild"
+  codebuild_name        = lower("${var.pipeline_name}-apply")
+  codebuild_role        = aws_iam_role.codebuild.arn
+  environment_variables = var.environment_variables
+  build_timeout         = 60
+  build_spec            = "apply.yml"
+  log_group             = local.log_group
 }
 
 resource "aws_iam_role" "codebuild" {

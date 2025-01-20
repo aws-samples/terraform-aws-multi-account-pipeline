@@ -63,7 +63,23 @@ resource "aws_codepipeline" "this" {
         version         = "1"
 
         configuration = {
-          ProjectName = module.plan[action.key].codebuild_project.name
+          ProjectName = module.plan.codebuild_project.name
+          EnvironmentVariables = jsonencode([
+            {
+              name  = "WORKSPACE"
+              value = action.value
+              type  = "PLAINTEXT"
+            },
+            {
+              name  = "TF_VAR_account_id"
+              value = action.value
+              type  = "PLAINTEXT"
+            },
+            {
+              name  = "TF_VAR_account_name"
+              value = action.key
+              type  = "PLAINTEXT"
+          }])
         }
       }
     }
