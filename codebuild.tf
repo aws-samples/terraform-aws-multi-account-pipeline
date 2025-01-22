@@ -37,11 +37,11 @@ module "apply" {
   codebuild_name = lower("${var.pipeline_name}-apply-${each.key}")
   codebuild_role = aws_iam_role.codebuild.arn
   environment_variables = merge(tomap({
-    tf_var_account_name = each.key,
-    tf_var_account_id   = each.value,
+    TF_VAR_account_name = each.key,
+    TF_VAR_account_id   = each.value,
     ACCOUNT_NAME        = each.key,
     WORKSPACE           = each.value
-    workspace_directory = var.workspace_directory
+    WORKSPACE_DIRECTORY = var.workspace_directory
     }),
     var.environment_variables
   )
