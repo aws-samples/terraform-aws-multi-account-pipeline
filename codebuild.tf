@@ -40,7 +40,7 @@ module "apply" {
     tf_var_account_name = each.key,
     tf_var_account_id   = each.value,
     ACCOUNT_NAME        = each.key,
-    workspace           = each.value
+    WORKSPACE           = each.value
     workspace_directory = var.workspace_directory
     }),
     var.environment_variables
