@@ -19,7 +19,7 @@ phases:
         if [ -z "${WORKSPACE_DIRECTORY}" ]; then 
           terraform plan
         else
-          terraform plan -var-file=${WORKSPACE_DIRECTORY}/${WORKSPACE}.tfvars 
+          terraform plan -var-file=${WORKSPACE_DIRECTORY}/${WORKSPACE}.tfvars || terraform plan -var-file=${WORKSPACE_DIRECTORY}/${ACCOUNT_NAME}.tfvars 
         fi
 
   post_build:

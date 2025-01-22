@@ -20,7 +20,7 @@ phases:
         if [ -z "${WORKSPACE_DIRECTORY}" ]; then 
           terraform apply -auto-approve
         else
-          terraform apply -auto-approve -var-file=${WORKSPACE_DIRECTORY}/${WORKSPACE}.tfvars 
+          terraform apply -auto-approve -var-file=${WORKSPACE_DIRECTORY}/${WORKSPACE}.tfvars || terraform apply -auto-approve -var-file=${WORKSPACE_DIRECTORY}/${ACCOUNT_NAME}.tfvars
         fi
 
 

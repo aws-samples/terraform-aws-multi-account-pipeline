@@ -20,6 +20,7 @@ module "plan" {
   environment_variables = merge(tomap({
     TF_VAR_account_name = each.key,
     TF_VAR_account_id   = each.value,
+    ACCOUNT_NAME        = each.key,
     WORKSPACE           = each.value,
     WORKSPACE_DIRECTORY = var.workspace_directory
     }),
@@ -38,6 +39,7 @@ module "apply" {
   environment_variables = merge(tomap({
     tf_var_account_name = each.key,
     tf_var_account_id   = each.value,
+    ACCOUNT_NAME        = each.key,
     workspace           = each.value
     workspace_directory = var.workspace_directory
     }),
