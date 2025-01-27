@@ -33,8 +33,17 @@ resource "aws_route_table" "this" {
 
 # conditionals
 
-resource "aws_s3_bucket" "that" {
+resource "aws_s3_bucket" "foo" {
   count  = var.account_id == "112233445566" ? 1 : 0
   bucket = "conditional-bucket-${var.account_id}"
 }
 
+resource "aws_s3_bucket" "bar" {
+  count  = terraform.workspace == "112233445566" ? 1 : 0
+  bucket = "conditional-bucket-${var.account_id}"
+}
+
+resource "aws_s3_bucket" "baz" {
+  count  = var.account_name == "workload3" ? 1 : 0
+  bucket = "conditional-bucket-${var.account_id}"
+}

@@ -20,10 +20,13 @@ module "plan" {
   environment_variables = merge(tomap({
     TF_VAR_account_name = each.key,
     TF_VAR_account_id   = each.value,
-    WORKSPACE = each.value }),
+    ACCOUNT_NAME        = each.key,
+    WORKSPACE           = each.value,
+    WORKSPACE_DIRECTORY = var.workspace_directory
+    }),
     var.environment_variables
   )
-  build_timeout = 10
+  build_timeout = var.codebuild_timeout
   build_spec    = "plan.yml"
   log_group     = local.log_group
 }
@@ -36,10 +39,13 @@ module "apply" {
   environment_variables = merge(tomap({
     TF_VAR_account_name = each.key,
     TF_VAR_account_id   = each.value,
-    WORKSPACE = each.value }),
+    ACCOUNT_NAME        = each.key,
+    WORKSPACE           = each.value
+    WORKSPACE_DIRECTORY = var.workspace_directory
+    }),
     var.environment_variables
   )
-  build_timeout = 60
+  build_timeout = var.codebuild_timeout
   build_spec    = "apply.yml"
   log_group     = local.log_group
 }

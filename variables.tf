@@ -23,6 +23,12 @@ variable "environment_variables" {
   }
 }
 
+variable "checkov_skip" {
+  description = "list of checkov checks to skip"
+  type        = list(string)
+  default     = [""]
+}
+
 variable "accounts" {
   description = "list of accounts to deploy to"
   type        = map(string)
@@ -52,4 +58,14 @@ variable "detect_changes" {
 variable "codebuild_policy" {
   type    = string
   default = null
+}
+
+variable "workspace_directory" {
+  type    = string
+  default = ""
+}
+
+variable "codebuild_timeout" {
+  type    = number
+  default = 60
 }

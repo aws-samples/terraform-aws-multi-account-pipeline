@@ -75,7 +75,9 @@ module "pipeline" {
   detect_changes        = true
   kms_key               = aws_kms_key.this.arn
   access_logging_bucket = aws_s3_bucket.this.id
+  workspace_directory   = "workspaces"
 
+  codebuild_timeout     = 60
   environment_variables = {
     TF_VERSION     = "1.5.7"
     TFLINT_VERSION = "0.33.0"
@@ -94,9 +96,14 @@ module "pipeline" {
 
 `kms_key` is the arn of an *existing* AWS KMS key. This input will encrypt the Amazon S3 bucket with a AWS KMS key of your choice. Otherwise the bucket will be encrypted using SSE-S3. Your AWS KMS key policy will need to allow codebuild and codepipeline to `kms:GenerateDataKey*` and `kms:Decrypt`. 
 
+`workspace_directory` enables the use of workspace variable files (eg ./workspaces/<workspace>.tfvars. The input is the directory name that you wish to use. This input is recommended for advanced variable management, where complex and/or signficant amounts of different variables are applied to different AWS accounts.  
+
 `environment_variables` can be used to define terraform and [tf_lint](https://github.com/terraform-linters/tflint) versions. 
 
+`codebuild_timeout` alters the CodeBuild project timeout (in minutes). 
+
 `checkov_skip` defines [Checkov](https://www.checkov.io/) skips for the pipeline. This is useful for organization-wide policies, removing the need to add individual resource skips.
+
 
 
 ## Architecture
@@ -122,8 +129,6 @@ module "pipeline" {
 
 ## Best Practices
 
-The CodeBuild execution role is highly privileged as this pattern is designed for a wide audience to deploy any resource to an AWS account. It assumes there are strong organizational controls in place and good segregation practices at the AWS account level. 
-
 Permissions to your CodeCommit repository, CodeBuild projects, and CodePipeline pipeline should be tightly controlled. Here are some ideas:
 - [Specify approval permission for specific pipelines and approval actions](https://docs.aws.amazon.com/codepipeline/latest/userguide/approvals-iam-permissions.html#approvals-iam-permissions-limited)
 - [Using identity-based policies for AWS CodeBuild](https://docs.aws.amazon.com/codebuild/latest/userguide/auth-and-access-control-iam-identity-based-access-control.html) 
@@ -134,6 +139,7 @@ Checkov skips can be used where Checkov policies conflict with your organization
 ## Related Resources
 
 - [aws-terraform-pipeline](https://github.com/aws-samples/aws-terraform-pipeline)
+- [Terraform Workspaces](https://developer.hashicorp.com/terraform/language/state/workspaces)
 
 ## Security
 
