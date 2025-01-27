@@ -4,6 +4,7 @@
 # alternative ariable management 
 # using workspace_directory input
 # workspace_directory = "workspaces"
+# use config.auto.tfvars at root for variables for all workspaces
 
 owner = "bob"
 cidr  = "10.21.192.0/24"
