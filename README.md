@@ -75,6 +75,7 @@ module "pipeline" {
   detect_changes        = true
   kms_key               = aws_kms_key.this.arn
   access_logging_bucket = aws_s3_bucket.this.id
+  codebuild_policy      = "arn:aws:iam::aws:policy/AdministratorAccess"
   workspace_directory   = "workspaces"
 
   codebuild_timeout     = 60
@@ -95,6 +96,8 @@ module "pipeline" {
 `detect_changes` is used with third-party services, like GitHub. It enables AWS CodeConnections to invoke the pipeline when there is a commit to the repo.  
 
 `kms_key` is the arn of an *existing* AWS KMS key. This input will encrypt the Amazon S3 bucket with a AWS KMS key of your choice. Otherwise the bucket will be encrypted using SSE-S3. Your AWS KMS key policy will need to allow codebuild and codepipeline to `kms:GenerateDataKey*` and `kms:Decrypt`. 
+
+`codebuild_policy` replaces the CodeBuild project IAM role with an IAM role of your choice. This may be useful if you want to deploy resources to the same AWS account that the pipeline resides in. 
 
 `workspace_directory` enables the use of workspace variable files (eg ./workspaces/<workspace>.tfvars. The input is the directory name that you wish to use. This input is recommended for advanced variable management, where complex and/or signficant amounts of different variables are applied to different AWS accounts.  
 
