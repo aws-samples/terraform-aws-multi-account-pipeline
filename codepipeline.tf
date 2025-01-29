@@ -65,7 +65,7 @@ resource "aws_codepipeline" "this" {
         version         = "1"
 
         configuration = {
-          ProjectName = module.plan[action.key].codebuild_project.name
+          ProjectName = module.plan.codebuild_project.name
           EnvironmentVariables = jsonencode([
             {
               name  = "WORKSPACE"
@@ -122,7 +122,7 @@ resource "aws_codepipeline" "this" {
         version         = "1"
 
         configuration = {
-          ProjectName = module.apply[action.key].codebuild_project.name
+          ProjectName = module.apply.codebuild_project.name
           EnvironmentVariables = jsonencode([
             {
               name  = "WORKSPACE"
