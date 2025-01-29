@@ -13,15 +13,10 @@ module "validation" {
 }
 
 module "plan" {
-  for_each       = var.accounts
   source         = "./modules/codebuild"
-  codebuild_name = lower("${var.pipeline_name}-plan-${each.key}")
+  codebuild_name = lower("${var.pipeline_name}-plan")
   codebuild_role = aws_iam_role.codebuild.arn
   environment_variables = merge(tomap({
-    TF_VAR_account_name = each.key,
-    TF_VAR_account_id   = each.value,
-    ACCOUNT_NAME        = each.key,
-    WORKSPACE           = each.value,
     WORKSPACE_DIRECTORY = var.workspace_directory
     }),
     var.environment_variables
@@ -32,15 +27,10 @@ module "plan" {
 }
 
 module "apply" {
-  for_each       = var.accounts
   source         = "./modules/codebuild"
-  codebuild_name = lower("${var.pipeline_name}-apply-${each.key}")
+  codebuild_name = lower("${var.pipeline_name}-apply")
   codebuild_role = aws_iam_role.codebuild.arn
   environment_variables = merge(tomap({
-    TF_VAR_account_name = each.key,
-    TF_VAR_account_id   = each.value,
-    ACCOUNT_NAME        = each.key,
-    WORKSPACE           = each.value
     WORKSPACE_DIRECTORY = var.workspace_directory
     }),
     var.environment_variables
