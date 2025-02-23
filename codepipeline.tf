@@ -14,19 +14,20 @@ resource "aws_codepipeline" "this" {
 
   stage {
     name = "Source"
-
     action {
       name             = "Source"
       category         = "Source"
       owner            = "AWS"
-      provider         = "CodeCommit"
+      provider         = var.connection == null ? "CodeCommit" : "CodeStarSourceConnection"
       version          = "1"
       output_artifacts = ["source_output"]
-
       configuration = {
-        RepositoryName       = var.repo
+        RepositoryName       = var.connection == null ? var.repo : null
+        FullRepositoryId     = var.connection == null ? null : var.repo
+        ConnectionArn        = var.connection
         BranchName           = var.branch
-        PollForSourceChanges = false
+        PollForSourceChanges = var.connection == null ? false : null
+        DetectChanges        = var.connection == null ? null : var.detect_changes
       }
     }
   }
@@ -202,11 +203,12 @@ data "aws_iam_policy_document" "codepipeline" {
       "codecommit:GetCommit",
       "codecommit:UploadArchive",
       "codecommit:GetUploadArchiveStatus",
-      "codecommit:CancelUploadArchive"
+      "codecommit:CancelUploadArchive",
+      "codestar-connections:UseConnection"
     ]
 
     resources = [
-      "arn:aws:codecommit:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${var.repo}"
+      var.connection == null ? "arn:aws:codecommit:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${var.repo}" : var.connection
     ]
   }
 

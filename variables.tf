@@ -30,14 +30,12 @@ variable "checkov_skip" {
 }
 
 variable "accounts" {
-  description = "list of accounts to deploy to"
-  type        = map(string)
+  type = map(string)
 }
 
 variable "kms_key" {
-  description = "kms key to be used"
-  type        = string
-  default     = null
+  type    = string
+  default = null
 }
 
 variable "access_logging_bucket" {
