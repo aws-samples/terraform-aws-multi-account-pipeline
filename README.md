@@ -107,8 +107,6 @@ module "pipeline" {
 
 `checkov_skip` defines [Checkov](https://www.checkov.io/) skips for the pipeline. This is useful for organization-wide policies, removing the need to add individual resource skips.
 
-
-
 ## Architecture
 
 ![image info](./img/architecture.png)
