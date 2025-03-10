@@ -130,7 +130,7 @@ data "aws_iam_policy_document" "codebuild" {
     ]
 
     resources = [
-      "*"
+      "*" // for s3 backend
     ]
   }
 
@@ -144,7 +144,7 @@ data "aws_iam_policy_document" "codebuild" {
     ]
 
     resources = [
-      "*"
+      "*" // for s3 backend
     ]
   }
 
