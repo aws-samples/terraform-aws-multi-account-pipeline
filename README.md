@@ -2,11 +2,13 @@
 
 Deploy terraform to multiple AWS accounts.
 
+(If you want to deploy a single AWS account use [aws-terraform-pipeline](https://github.com/aws-samples/aws-terraform-pipeline))
+
 ## Prerequisites
 1. An existing AWS CodeCommit repository *OR* an [AWS CodeConnection connection](https://docs.aws.amazon.com/dtconsole/latest/userguide/welcome-connections.html) to the third-party source and repo of your choice (GitHub, Gitlab, etc)
 2. [Remote state](https://developer.hashicorp.com/terraform/language/state/remote) that the pipeline can access (using the CodeBuild IAM role)
 3. A cross-account IAM role in the target accounts, that can be assumed by the pipeline (using the CodeBuild IAM Role).  
-4. Your code must be compatible with the pipeline's use of [Terraform Workspaces](https://developer.hashicorp.com/terraform/language/state/workspaces). Review the [example code directory](./example-code) and ensure your code is compatible. 
+4. (Optional) Your code must be compatible with the pipeline's use of [Terraform Workspaces](https://developer.hashicorp.com/terraform/language/state/workspaces) if  you iwish to change variables between accounts. Review the [example code directory](./example-code) and ensure your code is compatible. 
  
 ## Deployment
 
@@ -14,6 +16,7 @@ This module must be deployed to a separate repository.
 
 ```
 your repo
+   modules
    backend.tf 
    config.auto.tfvars
    locals.tf 
@@ -75,37 +78,45 @@ module "pipeline" {
   detect_changes        = true
   kms_key               = aws_kms_key.this.arn
   access_logging_bucket = aws_s3_bucket.this.id
-  codebuild_policy      = "arn:aws:iam::aws:policy/AdministratorAccess"
-  workspace_directory   = "workspaces"
+  artifact_retention    = 90
 
-  codebuild_timeout     = 60
-  environment_variables = {
-    TF_VERSION     = "1.5.7"
-    TFLINT_VERSION = "0.33.0"
-  }
+  workspace_directory = "workspaces"
+
+  codebuild_policy  = aws_iam_policy.this.arn
+  build_timeout     = 10
+  terraform_version = "1.5.7"
+  checkov_version   = "3.2.0"
+  tflint_version    = "0.33.0"
 
   checkov_skip = [
     "CKV_AWS_144", #Ensure that S3 bucket has cross-region replication enabled
   ]
-
 }
 ```
 
-`branch` is the CodeCommit branch. It defaults to "main" and may need to be altered if you are using pre-commit hooks that default to "master". 
+`branch` is the branch to source. It defaults to "main" and may need to be altered if you are using pre-commit hooks that default to "master". 
 
 `detect_changes` is used with third-party services, like GitHub. It enables AWS CodeConnections to invoke the pipeline when there is a commit to the repo.  
 
-`kms_key` is the arn of an *existing* AWS KMS key. This input will encrypt the Amazon S3 bucket with a AWS KMS key of your choice. Otherwise the bucket will be encrypted using SSE-S3. Your AWS KMS key policy will need to allow codebuild and codepipeline to `kms:GenerateDataKey*` and `kms:Decrypt`. 
+`kms_key` is the arn of an *existing* AWS KMS key. This input will encrypt the Amazon S3 bucket with a AWS KMS key of your choice. Otherwise the bucket will be encrypted using SSE-S3. Your AWS KMS key policy will need to allow codebuild and codepipeline to `kms:GenerateDataKey*` and `kms:Decrypt`.
 
-`codebuild_policy` replaces the CodeBuild project IAM role with an IAM role of your choice. This may be useful if you want to deploy resources to the same AWS account that the pipeline resides in. 
+`access_logging_bucket` S3 server access logs bucket ARN, enables server access logging on the S3 artifact bucket.
+
+`artifact_retention` controls the S3 artifact bucket retention period. It defaults to 90 (days). 
 
 `workspace_directory` enables the use of workspace variable files (eg ./workspaces/<workspace>.tfvars. The input is the directory name that you wish to use. This input is recommended for advanced variable management, where complex and/or signficant amounts of different variables are applied to different AWS accounts.  
 
-`environment_variables` can be used to define terraform and [tf_lint](https://github.com/terraform-linters/tflint) versions. 
+`codebuild_policy` replaces the [AWSAdministratorAccess](https://docs.aws.amazon.com/aws-managed-policy/latest/reference/AdministratorAccess.html) IAM policy. This can be used if you want to scope the permissions of the pipeline. 
 
-`codebuild_timeout` alters the CodeBuild project timeout (in minutes). 
+`build_timeout` is the CodeBuild project build timeout. It defaults to 10 (minutes). 
 
-`checkov_skip` defines [Checkov](https://www.checkov.io/) skips for the pipeline. This is useful for organization-wide policies, removing the need to add individual resource skips.
+`terraform_version` controls the terraform version. It defaults to latest.
+
+`checkov_version` controls the [Checkov](https://www.checkov.io/) version. It defaults to latest.
+
+`tflint_version` controls the [tflint](https://github.com/terraform-linters/tflint) version. It defaults to 0.33.0.
+
+`checkov_skip` defines [Checkov](https://www.checkov.io/) skips for the pipeline. This is useful for organization-wide policies, removing the need to add individual resource skips. 
 
 ## Architecture
 

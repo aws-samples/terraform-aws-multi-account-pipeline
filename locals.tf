@@ -5,15 +5,16 @@ locals {
   log_group = "/aws/${var.pipeline_name}"
 
   validation_stages = {
-    validate = var.environment_variables,
-    fmt      = var.environment_variables,
-    lint     = var.environment_variables,
-    sast = merge(tomap({
-      SAST_REPORT_ARN = aws_codebuild_report_group.sast.arn
-      }),
-      var.environment_variables,
-    )
+    validate = "hashicorp/terraform:${var.terraform_version}"
+    fmt      = "hashicorp/terraform:${var.terraform_version}"
+    lint     = "aws/codebuild/amazonlinux2-x86_64-standard:5.0"
+    sast     = "bridgecrew/checkov:${var.checkov_version}"
+  }
+
+  env_var = {
+    TFLINT_VERSION      = var.tflint_version
+    SAST_REPORT_ARN     = aws_codebuild_report_group.sast.arn
+    CHECKOV_SKIPS       = join(",", "${var.checkov_skip}")
+    WORKSPACE_DIRECTORY = var.workspace_directory
   }
 }
-
-
