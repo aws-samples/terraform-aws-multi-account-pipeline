@@ -7,8 +7,12 @@ phases:
       - terraform init -lock=false -input=false
       - terraform workspace select -or-create ${WORKSPACE}
 
-      - terraform plan -var-file=${WORKSPACE_DIRECTORY}/${ACCOUNT_NAME}.tfvars 
-  
+      - |
+        if [ -z "${WORKSPACE_DIRECTORY}" ]; then 
+          terraform plan
+        else
+          terraform plan -var-file=${WORKSPACE_DIRECTORY}/${WORKSPACE}.tfvars || terraform plan -var-file=${WORKSPACE_DIRECTORY}/${ACCOUNT_NAME}.tfvars 
+        fi
 
   post_build:
     commands:

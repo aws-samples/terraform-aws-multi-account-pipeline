@@ -12,8 +12,9 @@ locals {
   }
 
   env_var = {
-    TFLINT_VERSION  = var.tflint_version
-    SAST_REPORT_ARN = aws_codebuild_report_group.sast.arn
-    CHECKOV_SKIPS   = join(",", "${var.checkov_skip}")
+    TFLINT_VERSION      = var.tflint_version
+    SAST_REPORT_ARN     = aws_codebuild_report_group.sast.arn
+    CHECKOV_SKIPS       = join(",", "${var.checkov_skip}")
+    WORKSPACE_DIRECTORY = var.workspace_directory
   }
 }
