@@ -22,6 +22,12 @@ variable "access_logging_bucket" {
   default     = null
 }
 
+variable "artifact_retention" {
+  description = "s3 artifact bucket retention, in days"
+  type        = number
+  default     = 90
+}
+
 variable "branch" {
   type    = string
   default = "main"
