@@ -8,7 +8,7 @@ locals {
     validate = "hashicorp/terraform:${var.terraform_version}"
     fmt      = "hashicorp/terraform:${var.terraform_version}"
     lint     = "aws/codebuild/amazonlinux2-x86_64-standard:5.0"
-    sast     = "bridgecrew/checkov:${var.checkov_version}"
+    sast     = "aws/codebuild/amazonlinux2-x86_64-standard:5.0"
   }
 
   env_var = {
@@ -16,5 +16,6 @@ locals {
     SAST_REPORT_ARN     = aws_codebuild_report_group.sast.arn
     CHECKOV_SKIPS       = join(",", "${var.checkov_skip}")
     WORKSPACE_DIRECTORY = var.workspace_directory
+    TF_VERSION          = var.terraform_version
   }
 }
