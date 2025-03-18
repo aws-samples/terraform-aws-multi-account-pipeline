@@ -12,7 +12,7 @@ phases:
       - yum install -y terraform-${TF_VERSION}
       - python -V
       - pip3 install checkov
-
+  
   build:
     commands:   
       - cd "$CODEBUILD_SRC_DIR"
@@ -22,10 +22,11 @@ phases:
         else
           checkov --directory ./ --skip-path ./deploy --skip-check ${CHECKOV_SKIPS} -o junitxml > checkov.xml
         fi
-
+      - cat checkov.xml
+       
   post_build:
     commands:
-      - echo "checkov complete, see report for details"
+      - echo "sast complete"
 
 reports:
   ${SAST_REPORT_ARN}:
@@ -33,3 +34,4 @@ reports:
       - checkov.xml
     base-directory: ./
     file-format: JUNITXML
+      
