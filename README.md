@@ -1,4 +1,4 @@
-# terraform-multi-account-pipeline
+# terraform-aws-multi-account-pipeline
 
 Deploy terraform to multiple AWS accounts.
 
@@ -36,7 +36,8 @@ Review the [example code directory](./example-code) and ensure the code in your 
 AWS CodeCommit: 
 ```hcl
 module "pipeline" {
-  source        = "github.com/aws-samples/terraform-multi-account-pipeline"
+  source        = "aws-samples/multi-account-pipeline/aws"
+  version       = "1.3.1"
   pipeline_name = "pipeline"
   repo          = aws_repository.this.repository_name
   accounts      = {
@@ -49,7 +50,8 @@ module "pipeline" {
 Third-party service:
 ```hcl
 module "pipeline" {
-  source        = "github.com/aws-samples/terraform-multi-account-pipeline"
+  source        = "aws-samples/multi-account-pipeline/aws"
+  version       = "1.3.1"
   pipeline_name = "pipeline"
   repo          = "organization/repo"
   connection    = aws_codestarconnections_connection.this.arn
@@ -152,6 +154,7 @@ Checkov skips can be used where Checkov policies conflict with your organization
 
 - [aws-terraform-pipeline](https://github.com/aws-samples/aws-terraform-pipeline)
 - [Terraform Workspaces](https://developer.hashicorp.com/terraform/language/state/workspaces)
+- [Terraform Registry](https://registry.terraform.io/modules/aws-samples/multi-account-pipeline/aws/latest)
 
 ## Security
 
@@ -160,3 +163,4 @@ See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more inform
 ## License
 
 This library is licensed under the MIT-0 License. See the LICENSE file.
+
