@@ -13,8 +13,3 @@ phases:
         else
           terraform apply -auto-approve -var-file=${WORKSPACE_DIRECTORY}/${WORKSPACE}.tfvars || terraform apply -auto-approve -var-file=${WORKSPACE_DIRECTORY}/${ACCOUNT_NAME}.tfvars
         fi
-
-
-  post_build:
-    commands:
-      - echo "apply complete"

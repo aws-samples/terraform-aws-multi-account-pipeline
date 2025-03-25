@@ -19,7 +19,3 @@ phases:
       - terraform init -backend=false
       - tflint --init
       - tflint
-
-  post_build:
-    commands:
-      - echo "lint complete"
