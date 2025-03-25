@@ -74,6 +74,12 @@ variable "kms_key" {
   default     = null
 }
 
+variable "log_retention" {
+  description = "CloudWatch log group retention, in days"
+  type        = number
+  default     = 90
+}
+
 variable "terraform_version" {
   type    = string
   default = "1.5.7"
