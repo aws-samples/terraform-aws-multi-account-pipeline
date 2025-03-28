@@ -90,6 +90,12 @@ module "pipeline" {
   checkov_version   = "3.2.0"
   tflint_version    = "0.48.0"
 
+  tags = join(",", [
+    "Environment=Dev",
+    "Source"
+  ])
+  tagnag_version = "0.5.5"
+
   checkov_skip = [
     "CKV_AWS_144", #Ensure that S3 bucket has cross-region replication enabled
   ]
@@ -117,6 +123,10 @@ module "pipeline" {
 `checkov_version` controls the [Checkov](https://www.checkov.io/) version. It defaults to latest.
 
 `tflint_version` controls the [tflint](https://github.com/terraform-linters/tflint) version. It defaults to 0.48.0.
+
+`tags` enables tag validation with [tag-nag](https://github.com/jakebark/tag-nag). Input a list of tag keys and/or tag keys and values to enforce. Input must be passed as a string, see [commands](https://github.com/jakebark/tag-nag?tab=readme-ov-file#commands). 
+
+`tagnag_version` controls the [tag-nag](https://github.com/jakebark/tag-nag) version. It defaults to 0.5.5.
 
 `checkov_skip` defines [Checkov](https://www.checkov.io/) skips for the pipeline. This is useful for organization-wide policies, removing the need to add individual resource skips. 
 
@@ -154,7 +164,7 @@ Checkov skips can be used where Checkov policies conflict with your organization
 
 - [aws-terraform-pipeline](https://github.com/aws-samples/aws-terraform-pipeline)
 - [Terraform Workspaces](https://developer.hashicorp.com/terraform/language/state/workspaces)
-- [Terraform Registry](https://registry.terraform.io/modules/aws-samples/multi-account-pipeline/aws/latest)
+- [Terraform Registry: aws-samples/multi-account-pipeline/aws](https://registry.terraform.io/modules/aws-samples/multi-account-pipeline/aws/latest)
 
 ## Security
 
