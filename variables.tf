@@ -80,6 +80,17 @@ variable "log_retention" {
   default     = 90
 }
 
+variable "tags" {
+  description = "tags to check for"
+  type        = string
+  default     = ""
+}
+
+variable "tagnag_version" {
+  type    = string
+  default = "0.5.5"
+}
+
 variable "terraform_version" {
   type    = string
   default = "1.5.7"
