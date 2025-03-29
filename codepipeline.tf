@@ -34,7 +34,6 @@ resource "aws_codepipeline" "this" {
 
   stage {
     name = "Validation"
-
     dynamic "action" {
       for_each = var.tags == "" ? local.validation_stages : local.conditional_validation_stages
       content {
@@ -54,7 +53,6 @@ resource "aws_codepipeline" "this" {
 
   stage {
     name = "Plan"
-
     dynamic "action" {
       for_each = var.accounts
       content {
@@ -91,11 +89,6 @@ resource "aws_codepipeline" "this" {
         }
       }
     }
-  }
-
-  stage {
-    name = "Approval"
-
     action {
       name     = "Approval"
       category = "Approval"
@@ -104,14 +97,13 @@ resource "aws_codepipeline" "this" {
       version  = "1"
 
       configuration = {
-        CustomData = "This action will approve the deployment of resources. Please ensure that you review the build logs of the plan stage before approving."
+        CustomData = "This action will approve the deployment of resources in ${var.pipeline_name}. Please review the plan stage before approving."
       }
     }
   }
 
   stage {
     name = "Apply"
-
     dynamic "action" {
       for_each = var.accounts
       content {
@@ -149,7 +141,6 @@ resource "aws_codepipeline" "this" {
       }
     }
   }
-
 }
 
 resource "aws_iam_role" "codepipeline" {
