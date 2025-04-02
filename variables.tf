@@ -80,6 +80,20 @@ variable "log_retention" {
   default     = 90
 }
 
+variable "mode" {
+  description = "pipeline execution mode"
+  type        = string
+  default     = "SUPERSEDED"
+  validation {
+    condition = contains([
+      "SUPERSEDED",
+      "PARALLEL",
+      "QUEUED"
+    ], var.mode)
+    error_message = "unsupported pipeline mode"
+  }
+}
+
 variable "tags" {
   description = "tags to check for"
   type        = string
