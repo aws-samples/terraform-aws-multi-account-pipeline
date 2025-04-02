@@ -96,7 +96,7 @@ resource "aws_codepipeline" "this" {
       version   = "1"
       run_order = 2
       configuration = {
-        CustomData = "This action will approve the deployment of resources in ${var.pipeline_name}. Please review the plan stage before approving."
+        CustomData = "This action will approve the deployment of resources in ${var.pipeline_name}. Please review the plan action before approving."
       }
     }
   }
