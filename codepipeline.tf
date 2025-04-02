@@ -5,7 +5,7 @@ resource "aws_codepipeline" "this" {
   name           = var.pipeline_name
   pipeline_type  = "V2"
   role_arn       = aws_iam_role.codepipeline.arn
-  execution_mode = "QUEUED"
+  execution_mode = var.mode
 
   artifact_store {
     location = aws_s3_bucket.this.id
@@ -34,7 +34,6 @@ resource "aws_codepipeline" "this" {
 
   stage {
     name = "Validation"
-
     dynamic "action" {
       for_each = var.tags == "" ? local.validation_stages : local.conditional_validation_stages
       content {
@@ -44,7 +43,6 @@ resource "aws_codepipeline" "this" {
         provider        = "CodeBuild"
         input_artifacts = ["source_output"]
         version         = "1"
-
         configuration = {
           ProjectName = module.validation[action.key].codebuild_project.name
         }
@@ -54,7 +52,6 @@ resource "aws_codepipeline" "this" {
 
   stage {
     name = "Plan"
-
     dynamic "action" {
       for_each = var.accounts
       content {
@@ -64,7 +61,7 @@ resource "aws_codepipeline" "this" {
         provider        = "CodeBuild"
         input_artifacts = ["source_output"]
         version         = "1"
-
+        run_order       = 1
         configuration = {
           ProjectName = module.plan.codebuild_project.name
           EnvironmentVariables = jsonencode([
@@ -91,27 +88,21 @@ resource "aws_codepipeline" "this" {
         }
       }
     }
-  }
-
-  stage {
-    name = "Approval"
-
     action {
-      name     = "Approval"
-      category = "Approval"
-      owner    = "AWS"
-      provider = "Manual"
-      version  = "1"
-
+      name      = "Approval"
+      category  = "Approval"
+      owner     = "AWS"
+      provider  = "Manual"
+      version   = "1"
+      run_order = 2
       configuration = {
-        CustomData = "This action will approve the deployment of resources. Please ensure that you review the build logs of the plan stage before approving."
+        CustomData = "This action will approve the deployment of resources in ${var.pipeline_name}. Please review the plan action before approving."
       }
     }
   }
 
   stage {
     name = "Apply"
-
     dynamic "action" {
       for_each = var.accounts
       content {
@@ -121,7 +112,6 @@ resource "aws_codepipeline" "this" {
         provider        = "CodeBuild"
         input_artifacts = ["source_output"]
         version         = "1"
-
         configuration = {
           ProjectName = module.apply.codebuild_project.name
           EnvironmentVariables = jsonencode([
@@ -149,7 +139,6 @@ resource "aws_codepipeline" "this" {
       }
     }
   }
-
 }
 
 resource "aws_iam_role" "codepipeline" {
