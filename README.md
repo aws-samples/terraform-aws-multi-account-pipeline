@@ -37,7 +37,7 @@ AWS CodeCommit:
 ```hcl
 module "pipeline" {
   source        = "aws-samples/multi-account-pipeline/aws"
-  version       = "1.3.1"
+  version       = "1.5.1"
   pipeline_name = "pipeline"
   repo          = aws_repository.this.repository_name
   accounts      = {
@@ -51,7 +51,7 @@ Third-party service:
 ```hcl
 module "pipeline" {
   source        = "aws-samples/multi-account-pipeline/aws"
-  version       = "1.3.1"
+  version       = "1.5.1"
   pipeline_name = "pipeline"
   repo          = "organization/repo"
   connection    = aws_codestarconnections_connection.this.arn
