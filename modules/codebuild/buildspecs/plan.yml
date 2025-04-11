@@ -4,7 +4,6 @@ phases:
   build:
     commands:
       - cd "$CODEBUILD_SRC_DIR"
-      - git switch main
       - terraform init -lock=false -input=false
       - terraform workspace select -or-create ${WORKSPACE}
 
