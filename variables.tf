@@ -64,7 +64,7 @@ variable "codebuild_policy" {
 
 variable "detect_changes" {
   description = "allows third-party servicesm like GitHub to invoke the pipeline"
-  type        = string
+  type        = bool
   default     = false
 }
 
