@@ -10,7 +10,7 @@ phases:
       - yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
       - yum install -y terraform-${TF_VERSION}
       - python -V
-      - pip3 install checkov
+      - pip3 install checkov==${CHECKOV_VERSION}
   
   build:
     commands:   
@@ -28,4 +28,4 @@ reports:
       - checkov.xml
     base-directory: ./
     file-format: JUNITXML
-      
+     
