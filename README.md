@@ -37,7 +37,7 @@ AWS CodeCommit:
 ```hcl
 module "pipeline" {
   source        = "aws-samples/multi-account-pipeline/aws"
-  version       = "1.5.1"
+  version       = "1.5.2"
   pipeline_name = "pipeline"
   repo          = aws_repository.this.repository_name
   accounts      = {
@@ -51,7 +51,7 @@ Third-party service:
 ```hcl
 module "pipeline" {
   source        = "aws-samples/multi-account-pipeline/aws"
-  version       = "1.5.1"
+  version       = "1.5.2"
   pipeline_name = "pipeline"
   repo          = "organization/repo"
   connection    = aws_codestarconnections_connection.this.arn
@@ -78,7 +78,7 @@ module "pipeline" {
   ...
   branch                = "main"
   mode                  = "SUPERSEDED"
-  detect_changes        = true
+  detect_changes        = false
   kms_key               = aws_kms_key.this.arn
   access_logging_bucket = aws_s3_bucket.this.id
   artifact_retention    = 90
@@ -105,7 +105,7 @@ module "pipeline" {
 
 `branch` is the branch to source. It defaults to `main`.
 
-`mode` is [pipeline execution mode](https://docs.aws.amazon.com/codepipeline/latest/userguide/concepts-how-it-works.html#concepts-how-it-works-executions). It defaults to `SUPERSEDED`.`detect_changes` is used with third-party services, like GitHub. It enables AWS CodeConnections to invoke the pipeline when there is a commit to the repo.  
+`mode` is [pipeline execution mode](https://docs.aws.amazon.com/codepipeline/latest/userguide/concepts-how-it-works.html#concepts-how-it-works-executions). It defaults to `SUPERSEDED`.`detect_changes` is used with third-party services, like GitHub. It enables AWS CodeConnections to invoke the pipeline when there is a commit to the repo. It defaults to `false`. 
 
 `kms_key` is the arn of an *existing* AWS KMS key. This input will encrypt the Amazon S3 bucket with a AWS KMS key of your choice. Otherwise the bucket will be encrypted using SSE-S3. Your AWS KMS key policy will need to allow codebuild and codepipeline to `kms:GenerateDataKey*` and `kms:Decrypt`.
 
