@@ -8,7 +8,7 @@ Deploy terraform to multiple AWS accounts.
 1. An existing AWS CodeCommit repository *OR* an [AWS CodeConnection connection](https://docs.aws.amazon.com/dtconsole/latest/userguide/welcome-connections.html) to the third-party source and repo of your choice (GitHub, Gitlab, etc)
 2. [Remote state](https://developer.hashicorp.com/terraform/language/state/remote) that the pipeline can access (using the CodeBuild IAM role)
 3. A cross-account IAM role in the target accounts, that can be assumed by the pipeline (using the CodeBuild IAM Role).  
-4. (Optional) Your code must be compatible with the pipeline's use of [Terraform Workspaces](https://developer.hashicorp.com/terraform/language/state/workspaces) if  you iwish to change variables between accounts. Review the [example code directory](./example-code) and ensure your code is compatible. 
+4. (Optional) Your code must be compatible with the pipeline's use of [Terraform Workspaces](https://developer.hashicorp.com/terraform/language/state/workspaces) if you wish to change variables between accounts. Review the [example code directory](./example-code) and ensure your code is compatible. 
  
 ## Deployment
 
@@ -92,7 +92,7 @@ module "pipeline" {
   tflint_version    = "0.48.0"
 
   tags = join(",", [
-    "Environment=Dev",
+    "Environment[Dev,Prod]",
     "Source"
   ])
   tagnag_version = "0.5.8"
