@@ -3,7 +3,7 @@ output "pipeline" {
 }
 
 output "pipeline_role" {
-  value = aws_iam_role.codepipeline_role
+  value = aws_iam_role.codepipeline
 }
 
 output "codebuild_role" {
