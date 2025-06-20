@@ -37,7 +37,7 @@ AWS CodeCommit:
 ```hcl
 module "pipeline" {
   source        = "aws-samples/multi-account-pipeline/aws"
-  version       = "1.5.3"
+  version       = "1.5.x"
   pipeline_name = "pipeline"
   repo          = aws_repository.this.repository_name
   accounts      = {
@@ -51,7 +51,7 @@ Third-party service:
 ```hcl
 module "pipeline" {
   source        = "aws-samples/multi-account-pipeline/aws"
-  version       = "1.5.3"
+  version       = "1.5.x"
   pipeline_name = "pipeline"
   repo          = "organization/repo"
   connection    = aws_codestarconnections_connection.this.arn
@@ -87,15 +87,15 @@ module "pipeline" {
 
   codebuild_policy  = aws_iam_policy.this.arn
   build_timeout     = 10
-  terraform_version = "1.5.7"
+  terraform_version = "1.7.0"
   checkov_version   = "3.2.0"
-  tflint_version    = "0.48.0"
+  tflint_version    = "0.55.0"
 
   tags = join(",", [
     "Environment[Dev,Prod]",
     "Source"
   ])
-  tagnag_version = "0.5.8"
+  tagnag_version = "0.7.9"
 
   checkov_skip = [
     "CKV_AWS_144", #Ensure that S3 bucket has cross-region replication enabled
