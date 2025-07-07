@@ -186,7 +186,6 @@ data "aws_iam_policy_document" "codepipeline" {
       "s3:PutObjectAcl",
       "s3:PutObject"
     ]
-
     resources = [
       "${aws_s3_bucket.this.arn}",
       "${aws_s3_bucket.this.arn}/*"
@@ -203,7 +202,6 @@ data "aws_iam_policy_document" "codepipeline" {
       "codecommit:CancelUploadArchive",
       "codestar-connections:UseConnection"
     ]
-
     resources = [
       var.connection == null ? "arn:aws:codecommit:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${var.repo}" : var.connection
     ]
@@ -215,7 +213,6 @@ data "aws_iam_policy_document" "codepipeline" {
       "codebuild:BatchGetBuilds",
       "codebuild:StartBuild"
     ]
-
     resources = [
       "arn:aws:codebuild:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:project/${var.pipeline_name}-*"
     ]

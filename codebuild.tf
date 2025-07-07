@@ -81,7 +81,6 @@ data "aws_iam_policy_document" "codebuild" {
       "logs:CreateLogStream",
       "logs:PutLogEvents"
     ]
-
     resources = [
       "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:*"
     ]
@@ -94,7 +93,6 @@ data "aws_iam_policy_document" "codebuild" {
       "codebuild:UpdateReport",
       "codebuild:BatchPutTestCases"
     ]
-
     resources = [
       aws_codebuild_report_group.sast.arn
     ]
@@ -106,7 +104,6 @@ data "aws_iam_policy_document" "codebuild" {
       "s3:GetObject",
       "s3:PutObject"
     ]
-
     resources = [
       "${aws_s3_bucket.this.arn}/*",
     ]
@@ -117,7 +114,6 @@ data "aws_iam_policy_document" "codebuild" {
     actions = [
       "sts:AssumeRole"
     ]
-
     resources = [
       "*"
     ]
@@ -130,7 +126,6 @@ data "aws_iam_policy_document" "codebuild" {
       "dynamodb:PutItem",
       "dynamodb:DeleteItem"
     ]
-
     resources = [
       "*" // for s3 backend
     ]
@@ -144,7 +139,6 @@ data "aws_iam_policy_document" "codebuild" {
       "s3:DeleteObject",
       "s3:ListBucket"
     ]
-
     resources = [
       "*" // for s3 backend
     ]
@@ -156,7 +150,6 @@ data "aws_iam_policy_document" "codebuild" {
       "kms:GenerateDataKey*",
       "kms:Decrypt"
     ]
-
     resources = [
       "*"
     ]
