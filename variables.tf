@@ -119,3 +119,12 @@ variable "workspace_directory" {
   type    = string
   default = ""
 }
+
+variable "vpc" {
+  type = object({
+    vpc_id             = string
+    subnets            = list(string)
+    security_group_ids = list(string)
+  })
+  default = null
+}
