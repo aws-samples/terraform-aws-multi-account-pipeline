@@ -161,7 +161,6 @@ data "aws_iam_policy_document" "codebuild" {
       effect = "Allow"
       actions = [
         "ec2:CreateNetworkInterface",
-        "ec2:CreateNetworkInterfacePermission",
         "ec2:DescribeDhcpOptions",
         "ec2:DescribeNetworkInterfaces",
         "ec2:DeleteNetworkInterface",
@@ -172,6 +171,42 @@ data "aws_iam_policy_document" "codebuild" {
       resources = [
         "*"
       ]
+      condition {
+        test     = "StringLike"
+        variable = "aws:SourceArn"
+        values = [
+          "arn:aws:codebuild:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:project/${var.pipeline_name}-*"
+        ]
+      }
+    }
+  }
+
+  dynamic "statement" {
+    for_each = var.vpc == null ? [] : [var.vpc]
+    content {
+      effect = "Allow"
+      actions = [
+        "ec2:CreateNetworkInterfacePermission"
+
+      ]
+      resources = [
+        "arn:aws:ec2:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:network-interface/*"
+      ]
+      condition {
+        test     = "StringEquals"
+        variable = "ec2:AuthorizedService"
+        values = [
+          "codebuild.amazonaws.com"
+        ]
+      }
+      condition {
+        test     = "ArnEquals"
+        variable = "ec2:Subnet"
+        values = [
+          for id in var.vpc["subnets"] :
+          "arn:aws:ec2:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:subnet/${id}"
+        ]
+      }
     }
   }
 }
