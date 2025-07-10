@@ -28,7 +28,7 @@ pipeline repo
    main.tf <--module deployed here
 ```
 
-Segregation enables the pipeline to run commands against the code in "your repo" without affecting the pipeline infrastructure. Typically this could be an infrastructure or bootstrap repo for the AWS account thats used to provision infrastructure and/or multiple pipelines.
+Segregation enables the pipeline to run commands against the code in "your repo" without affecting the pipeline infrastructure. 
 
 Review the [example code directory](./example-code) and ensure the code in your repo is compatible. 
 
