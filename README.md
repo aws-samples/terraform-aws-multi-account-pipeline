@@ -111,27 +111,6 @@ module "pipeline" {
 
 See [optional inputs](./docs/optional_inputs.md) for descriptions.
 
-## Architecture
-
-![image info](./img/architecture.png)
-
-1. **(1a)** User commits to a third-party repository, this invokes the AWS Codepipeline pipeline; *or* **(1b)** User commits to a CodeCommit repository, this invokes an Amazon EventBridge rule, which runs the pipeline. 
-2. The pipeline validates the code and then runs a terraform plan against all of the target AWS accounts. Manual approval is then required to run the terraform apply. 
-3. Resources are deployed to the target AWS accounts using [Terraform Workspaces](https://developer.hashicorp.com/terraform/language/state/workspaces). Each AWS account is assigned their own Workspace using their AWS Account ID. 
-4. Artifacts and logs are exported to Amazon S3 and CloudWatch logs.
-
-## Troubleshooting
-
-| Issue | Fix |
-|---|---|
-| Failed lint or validate | Read the report or logs to discover why the code has failed, then make a new commit. |
-| Failed fmt | This means your code is not formatted. Run `terraform fmt --recursive` on your code, then make a new commit. |
-| Failed SAST | Read the Checkov logs (Details > Reports) and either make the correction in code or add a skip to the module inputs. |
-| Failed plan or apply stage | Read the report or logs to discover error in terraform code, then make a new commit. |
-| Pipeline fails on apply with `the action failed because no branch named main was found ...` | Either nothing has been committed to the repo or the branch is incorrect (Eg using `Master` not `Main`). Either commit to the Main branch or change the module input to fix this. |
-| `Invalid count argument` for `aws_s3_bucket_server_side_encryption_configuration` | The AWS KMS key must exist before the pipeline is created. If you create both at the same time, there is a dependency issue. |
-| Unable to find state file | Check state storage :env > AWS Account ID > backend key |
-
 ## Best Practices
 
 Permissions to your CodeCommit repository, CodeBuild projects, and CodePipeline pipeline should be tightly controlled. Here are some ideas:
