@@ -161,8 +161,10 @@ data "aws_iam_policy_document" "codebuild" {
     content {
       effect = "Allow"
       actions = [
+        "ec2:CreateNetworkInterface",
         "ec2:DescribeDhcpOptions",
         "ec2:DescribeNetworkInterfaces",
+        "ec2:DeleteNetworkInterface",
         "ec2:DescribeSubnets",
         "ec2:DescribeSecurityGroups",
         "ec2:DescribeVpcs"
@@ -199,29 +201,6 @@ data "aws_iam_policy_document" "codebuild" {
           "arn:aws:ec2:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:subnet/${id}"
         ]
       }
-    }
-  }
-
-  dynamic "statement" {
-    for_each = var.vpc == null ? [] : [var.vpc]
-    content {
-      effect = "Allow"
-      actions = [
-        "ec2:CreateNetworkInterface",
-        "ec2:DeleteNetworkInterface",
-      ]
-      resources = [
-        "*"
-      ]
-      condition {
-        test     = "ArnEquals"
-        variable = "ec2:Subnet"
-        values = [
-          for id in var.vpc["subnets"] :
-          "arn:aws:ec2:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:subnet/${id}"
-        ]
-      }
-
     }
   }
 }
