@@ -174,6 +174,7 @@ data "aws_iam_policy_document" "codebuild" {
     }
   }
 
+  # https://docs.aws.amazon.com/codebuild/latest/userguide/auth-and-access-control-iam-identity-based-access-control.html#customer-managed-policies-example-create-vpc-network-interface
   dynamic "statement" {
     for_each = var.vpc == null ? [] : [var.vpc]
     content {
