@@ -28,7 +28,7 @@ pipeline repo
    main.tf <--module deployed here
 ```
 
-Segregation enables the pipeline to run commands against the code in "your repo" without affecting the pipeline infrastructure. Typically this could be an infrastructure or bootstrap repo for the AWS account thats used to provision infrastructure and/or multiple pipelines.
+Segregation enables the pipeline to run commands against the code in "your repo" without affecting the pipeline infrastructure. 
 
 Review the [example code directory](./example-code) and ensure the code in your repo is compatible. 
 
@@ -109,6 +109,9 @@ module "pipeline" {
 }
 ```
 
+<<<<<<< HEAD
+See [optional inputs](./docs/optional_inputs.md) for descriptions.
+=======
 `branch` is the branch to source. It defaults to `main`.
 
 `mode` is [pipeline execution mode](https://docs.aws.amazon.com/codepipeline/latest/userguide/concepts-how-it-works.html#concepts-how-it-works-executions). It defaults to `SUPERSEDED`.`detect_changes` is used with third-party services, like GitHub. It enables AWS CodeConnections to invoke the pipeline when there is a commit to the repo. It defaults to `false`. 
@@ -168,6 +171,7 @@ Permissions to your CodeCommit repository, CodeBuild projects, and CodePipeline 
 - [Limit pushes and merges to branches in AWS CodeCommit](https://docs.aws.amazon.com/codecommit/latest/userguide/how-to-conditional-branch.html)
 
 Checkov skips can be used where Checkov policies conflict with your organization's practices or design decisions. The `checkov_skip` module input allows you to set skips for all resources in your repository. For example, if your organization operates in a single region you may want to add `CKV_AWS_144` (Ensure that S3 bucket has cross-region replication enabled). For individual resource skips, you can still use [inline code comments](https://www.checkov.io/2.Basics/Suppressing%20and%20Skipping%20Policies.html).
+>>>>>>> 50d0801 (codebuild vpc (#19))
 
 ## Related Resources
 
