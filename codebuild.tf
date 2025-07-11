@@ -11,6 +11,7 @@ module "validation" {
   build_spec            = "${each.key}.yml"
   log_group             = aws_cloudwatch_log_group.this.name
   image                 = each.value
+  vpc                   = var.vpc
 }
 
 module "plan" {
@@ -22,6 +23,7 @@ module "plan" {
   build_spec            = "plan.yml"
   log_group             = aws_cloudwatch_log_group.this.name
   image                 = "hashicorp/terraform:${var.terraform_version}"
+  vpc                   = var.vpc
 }
 
 module "apply" {
@@ -33,6 +35,7 @@ module "apply" {
   build_spec            = "apply.yml"
   log_group             = aws_cloudwatch_log_group.this.name
   image                 = "hashicorp/terraform:${var.terraform_version}"
+  vpc                   = var.vpc
 }
 
 resource "aws_iam_role" "codebuild" {
@@ -78,7 +81,6 @@ data "aws_iam_policy_document" "codebuild" {
       "logs:CreateLogStream",
       "logs:PutLogEvents"
     ]
-
     resources = [
       "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:*"
     ]
@@ -91,7 +93,6 @@ data "aws_iam_policy_document" "codebuild" {
       "codebuild:UpdateReport",
       "codebuild:BatchPutTestCases"
     ]
-
     resources = [
       aws_codebuild_report_group.sast.arn
     ]
@@ -103,7 +104,6 @@ data "aws_iam_policy_document" "codebuild" {
       "s3:GetObject",
       "s3:PutObject"
     ]
-
     resources = [
       "${aws_s3_bucket.this.arn}/*",
     ]
@@ -114,7 +114,6 @@ data "aws_iam_policy_document" "codebuild" {
     actions = [
       "sts:AssumeRole"
     ]
-
     resources = [
       "*"
     ]
@@ -127,7 +126,6 @@ data "aws_iam_policy_document" "codebuild" {
       "dynamodb:PutItem",
       "dynamodb:DeleteItem"
     ]
-
     resources = [
       "*" // for s3 backend
     ]
@@ -141,7 +139,6 @@ data "aws_iam_policy_document" "codebuild" {
       "s3:DeleteObject",
       "s3:ListBucket"
     ]
-
     resources = [
       "*" // for s3 backend
     ]
@@ -153,10 +150,58 @@ data "aws_iam_policy_document" "codebuild" {
       "kms:GenerateDataKey*",
       "kms:Decrypt"
     ]
-
     resources = [
       "*"
     ]
+  }
+
+  // https://docs.aws.amazon.com/codebuild/latest/userguide/auth-and-access-control-iam-identity-based-access-control.html#customer-managed-policies-example-create-vpc-network-interface
+  dynamic "statement" {
+    for_each = var.vpc == null ? [] : [var.vpc]
+    content {
+      effect = "Allow"
+      actions = [
+        "ec2:CreateNetworkInterface",
+        "ec2:DescribeDhcpOptions",
+        "ec2:DescribeNetworkInterfaces",
+        "ec2:DeleteNetworkInterface",
+        "ec2:DescribeSubnets",
+        "ec2:DescribeSecurityGroups",
+        "ec2:DescribeVpcs"
+      ]
+      resources = [
+        "*"
+      ]
+    }
+  }
+
+  dynamic "statement" {
+    for_each = var.vpc == null ? [] : [var.vpc]
+    content {
+      effect = "Allow"
+      actions = [
+        "ec2:CreateNetworkInterfacePermission"
+
+      ]
+      resources = [
+        "arn:aws:ec2:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:network-interface/*"
+      ]
+      condition {
+        test     = "StringEquals"
+        variable = "ec2:AuthorizedService"
+        values = [
+          "codebuild.amazonaws.com"
+        ]
+      }
+      condition {
+        test     = "ArnEquals"
+        variable = "ec2:Subnet"
+        values = [
+          for id in var.vpc["subnets"] :
+          "arn:aws:ec2:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:subnet/${id}"
+        ]
+      }
+    }
   }
 }
 
