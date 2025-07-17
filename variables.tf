@@ -94,6 +94,16 @@ variable "mode" {
   }
 }
 
+variable "notifications" {
+  description = "SNS notification configuration"
+  type = object({
+    sns_topic   = string
+    events      = list(string)
+    detail_type = string
+  })
+  default = null
+}
+
 variable "tags" {
   description = "tags to check for"
   type        = string

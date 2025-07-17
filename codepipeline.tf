@@ -150,12 +150,10 @@ data "aws_iam_policy_document" "codepipeline_assume" {
   statement {
     effect  = "Allow"
     actions = ["sts:AssumeRole"]
-
     principals {
       type        = "Service"
       identifiers = ["codepipeline.amazonaws.com"]
     }
-
     condition {
       test     = "StringEquals"
       variable = "aws:SourceArn"
@@ -217,5 +215,16 @@ data "aws_iam_policy_document" "codepipeline" {
       "arn:aws:codebuild:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:project/${var.pipeline_name}-*"
     ]
   }
+}
 
+resource "aws_codestarnotifications_notification_rule" "this" {
+  count          = var.notifications != null ? 1 : 0
+  name           = var.pipeline_name
+  detail_type    = var.notifications["detail_type"]
+  event_type_ids = var.notifications["events"]
+  resource       = aws_codepipeline.this.arn
+
+  target {
+    address = var.notifications["sns_topic"]
+  }
 }
