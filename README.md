@@ -97,6 +97,15 @@ module "pipeline" {
     security_group_ids = ["sg-001abcd2233ee4455"],
   }
 
+  notifications = {
+    sns_topic   = aws_sns_topic.this.arn
+    detail_type = "BASIC"
+    events = [
+      "codepipeline-pipeline-pipeline-execution-failed",
+      "codepipeline-pipeline-pipeline-execution-succeeded"
+    ]
+  }
+
   tags = join(",", [
     "Environment[Dev,Prod]",
     "Source"
