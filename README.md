@@ -87,7 +87,7 @@ module "pipeline" {
 
   codebuild_policy  = aws_iam_policy.this.arn
   build_timeout     = 10
-  terraform_version = "1.7.0"
+  terraform_version = "1.8.0"
   checkov_version   = "3.2.0"
   tflint_version    = "0.55.0"
 
