@@ -104,6 +104,12 @@ variable "notifications" {
   default = null
 }
 
+variable "sequential" {
+  description = ""
+  type        = bool
+  default     = false
+}
+
 variable "tags" {
   description = "tags to check for"
   type        = string
