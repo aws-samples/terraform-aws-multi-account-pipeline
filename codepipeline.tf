@@ -144,6 +144,92 @@ resource "aws_codepipeline" "this" {
       }
     }
   }
+
+  dynamic "stage" {
+    for_each = var.sequential ? [var.accounts] : []
+    content {
+      name = each.value
+
+      action {
+        name            = "Plan"
+        category        = "Build"
+        owner           = "AWS"
+        provider        = "CodeBuild"
+        input_artifacts = ["source_output"]
+        version         = "1"
+        configuration = {
+          ProjectName = module.plan.codebuild_project.name
+          EnvironmentVariables = jsonencode([
+            {
+              name  = "WORKSPACE"
+              value = stage.value
+              type  = "PLAINTEXT"
+            },
+            {
+              name  = "ACCOUNT_NAME"
+              value = stage.key
+              type  = "PLAINTEXT"
+            },
+            {
+              name  = "TF_VAR_account_id"
+              value = stage.value
+              type  = "PLAINTEXT"
+            },
+            {
+              name  = "TF_VAR_account_name"
+              value = stage.key
+              type  = "PLAINTEXT"
+          }])
+        }
+      }
+
+      action {
+        name      = "Approval"
+        category  = "Approval"
+        owner     = "AWS"
+        provider  = "Manual"
+        version   = "1"
+        run_order = 2
+        configuration = {
+          CustomData = "This action will approve the deployment of resources in ${var.pipeline_name}. Please review the plan action before approving."
+        }
+      }
+
+      action {
+        name            = "Apply"
+        category        = "Build"
+        owner           = "AWS"
+        provider        = "CodeBuild"
+        input_artifacts = ["source_output"]
+        version         = "1"
+        configuration = {
+          ProjectName = module.apply.codebuild_project.name
+          EnvironmentVariables = jsonencode([
+            {
+              name  = "WORKSPACE"
+              value = stage.value
+              type  = "PLAINTEXT"
+            },
+            {
+              name  = "ACCOUNT_NAME"
+              value = stage.key
+              type  = "PLAINTEXT"
+            },
+            {
+              name  = "TF_VAR_account_id"
+              value = stage.value
+              type  = "PLAINTEXT"
+            },
+            {
+              name  = "TF_VAR_account_name"
+              value = stage.key
+              type  = "PLAINTEXT"
+          }])
+        }
+      }
+    }
+  }
+
 }
 
 resource "aws_iam_role" "codepipeline" {
