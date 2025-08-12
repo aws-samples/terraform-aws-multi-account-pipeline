@@ -103,40 +103,43 @@ resource "aws_codepipeline" "this" {
     }
   }
 
-  stage {
-    name = "Apply"
-    dynamic "action" {
-      for_each = var.accounts
-      content {
-        name            = action.key
-        category        = "Build"
-        owner           = "AWS"
-        provider        = "CodeBuild"
-        input_artifacts = ["source_output"]
-        version         = "1"
-        configuration = {
-          ProjectName = module.apply.codebuild_project.name
-          EnvironmentVariables = jsonencode([
-            {
-              name  = "WORKSPACE"
-              value = action.value
-              type  = "PLAINTEXT"
-            },
-            {
-              name  = "ACCOUNT_NAME"
-              value = action.key
-              type  = "PLAINTEXT"
-            },
-            {
-              name  = "TF_VAR_account_id"
-              value = action.value
-              type  = "PLAINTEXT"
-            },
-            {
-              name  = "TF_VAR_account_name"
-              value = action.key
-              type  = "PLAINTEXT"
-          }])
+  dynamic "stage" {
+    for_each = var.sequential ? [] : ["apply"]
+    content {
+      name = "Apply"
+      dynamic "action" {
+        for_each = var.accounts
+        content {
+          name            = action.key
+          category        = "Build"
+          owner           = "AWS"
+          provider        = "CodeBuild"
+          input_artifacts = ["source_output"]
+          version         = "1"
+          configuration = {
+            ProjectName = module.apply.codebuild_project.name
+            EnvironmentVariables = jsonencode([
+              {
+                name  = "WORKSPACE"
+                value = action.value
+                type  = "PLAINTEXT"
+              },
+              {
+                name  = "ACCOUNT_NAME"
+                value = action.key
+                type  = "PLAINTEXT"
+              },
+              {
+                name  = "TF_VAR_account_id"
+                value = action.value
+                type  = "PLAINTEXT"
+              },
+              {
+                name  = "TF_VAR_account_name"
+                value = action.key
+                type  = "PLAINTEXT"
+            }])
+          }
         }
       }
     }
