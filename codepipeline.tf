@@ -148,7 +148,7 @@ resource "aws_codepipeline" "this" {
   dynamic "stage" {
     for_each = var.sequential ? [var.accounts] : []
     content {
-      name = each.value
+      name = stage.value
 
       action {
         name            = "Plan"
