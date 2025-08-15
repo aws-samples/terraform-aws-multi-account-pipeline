@@ -146,9 +146,9 @@ resource "aws_codepipeline" "this" {
   }
 
   dynamic "stage" {
-    for_each = var.sequential ? [for k, v in var.accounts : { name = k, id = v }] : []
+    for_each = var.sequential ? { for i, k in [for key, _ in var.accounts : key] : i => { name = k, id = var.accounts[k] } } : {}
     content {
-      name = stage.value.name
+      name = stage.key
 
       action {
         name            = "Plan"
@@ -163,22 +163,22 @@ resource "aws_codepipeline" "this" {
           EnvironmentVariables = jsonencode([
             {
               name  = "WORKSPACE"
-              value = stage.value.id
+              value = stage.value
               type  = "PLAINTEXT"
             },
             {
               name  = "ACCOUNT_NAME"
-              value = stage.value.name
+              value = stage.key
               type  = "PLAINTEXT"
             },
             {
               name  = "TF_VAR_account_id"
-              value = stage.value.id
+              value = stage.value
               type  = "PLAINTEXT"
             },
             {
               name  = "TF_VAR_account_name"
-              value = stage.value.name
+              value = stage.key
               type  = "PLAINTEXT"
           }])
         }
@@ -209,22 +209,22 @@ resource "aws_codepipeline" "this" {
           EnvironmentVariables = jsonencode([
             {
               name  = "WORKSPACE"
-              value = stage.value.id
+              value = stage.value
               type  = "PLAINTEXT"
             },
             {
               name  = "ACCOUNT_NAME"
-              value = stage.value.name
+              value = stage.key
               type  = "PLAINTEXT"
             },
             {
               name  = "TF_VAR_account_id"
-              value = stage.value.id
+              value = stage.value
               type  = "PLAINTEXT"
             },
             {
               name  = "TF_VAR_account_name"
-              value = stage.value.name
+              value = stage.key
               type  = "PLAINTEXT"
           }])
         }
