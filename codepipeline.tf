@@ -157,6 +157,7 @@ resource "aws_codepipeline" "this" {
         provider        = "CodeBuild"
         input_artifacts = ["source_output"]
         version         = "1"
+        run_order       = 1
         configuration = {
           ProjectName = module.plan.codebuild_project.name
           EnvironmentVariables = jsonencode([
@@ -202,6 +203,7 @@ resource "aws_codepipeline" "this" {
         provider        = "CodeBuild"
         input_artifacts = ["source_output"]
         version         = "1"
+        run_order       = 3
         configuration = {
           ProjectName = module.apply.codebuild_project.name
           EnvironmentVariables = jsonencode([
