@@ -146,7 +146,7 @@ resource "aws_codepipeline" "this" {
   }
 
   dynamic "stage" {
-    for_each = var.sequential ? { for i, k in [for key, _ in var.accounts : key] : i => { name = k, id = var.accounts[k] } } : {}
+    for_each = var.sequential ? var.accounts : {}
     content {
       name = stage.key
 
