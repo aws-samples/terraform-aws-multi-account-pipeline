@@ -57,7 +57,7 @@ data "aws_iam_policy_document" "codebuild_assume" {
       test     = "StringLike"
       variable = "aws:SourceArn"
       values = [
-        "arn:aws:codebuild:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:project/${var.pipeline_name}-*"
+        "arn:aws:codebuild:${local.region}:${data.aws_caller_identity.current.account_id}:project/${var.pipeline_name}-*"
       ]
     }
   }
@@ -82,7 +82,7 @@ data "aws_iam_policy_document" "codebuild" {
       "logs:PutLogEvents"
     ]
     resources = [
-      "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:*"
+      "arn:aws:logs:${local.region}:${data.aws_caller_identity.current.account_id}:*"
     ]
   }
 
@@ -184,7 +184,7 @@ data "aws_iam_policy_document" "codebuild" {
 
       ]
       resources = [
-        "arn:aws:ec2:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:network-interface/*"
+        "arn:aws:ec2:${local.region}:${data.aws_caller_identity.current.account_id}:network-interface/*"
       ]
       condition {
         test     = "StringEquals"
@@ -198,7 +198,7 @@ data "aws_iam_policy_document" "codebuild" {
         variable = "ec2:Subnet"
         values = [
           for id in var.vpc["subnets"] :
-          "arn:aws:ec2:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:subnet/${id}"
+          "arn:aws:ec2:${local.region}:${data.aws_caller_identity.current.account_id}:subnet/${id}"
         ]
       }
     }
