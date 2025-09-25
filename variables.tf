@@ -33,6 +33,17 @@ variable "branch" {
   default = "main"
 }
 
+variable "build_override" {
+  description = "Override CodeBuild images and buildspecs"
+  type = object({
+    plan_buildspec  = optional(string)
+    plan_image      = optional(string)
+    apply_buildspec = optional(string)
+    apply_image     = optional(string)
+  })
+  default = {}
+}
+
 variable "build_timeout" {
   description = "CodeBuild project build timeout"
   type        = number

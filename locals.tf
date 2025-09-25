@@ -19,6 +19,7 @@ locals {
     TF_VERSION          = var.terraform_version
     TFLINT_VERSION      = var.tflint_version
     WORKSPACE_DIRECTORY = var.workspace_directory
+    TERRAFORM_DIRECTORY = var.build_override["directory"]
   }
   conditional_env_var = merge(local.env_var, {
     TAGS           = var.tags
