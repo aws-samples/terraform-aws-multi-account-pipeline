@@ -16,6 +16,8 @@
 
 `build_timeout` is the CodeBuild project build timeout. It defaults to 10 (minutes). 
 
+`build_override` can replace the existing CodeBuild buildspecs and images with your own. The `directory` argument sets the path of the terraform (eg. `./terraform`), if its not in the root of your directory structure.
+
 `terraform_version` controls the terraform version. It defaults to 1.5.7.
 
 `checkov_version` controls the [Checkov](https://www.checkov.io/) version. It defaults to latest.
