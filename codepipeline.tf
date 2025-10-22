@@ -50,7 +50,7 @@ resource "aws_codepipeline" "this" {
     }
   }
   dynamic "stage" {
-    for_each = var.sequential ? [] : ["plan"]
+    for_each = var.deployment_type == "sequential" ? [] : ["plan"]
     content {
       name = "Plan"
       dynamic "action" {
@@ -104,7 +104,7 @@ resource "aws_codepipeline" "this" {
   }
 
   dynamic "stage" {
-    for_each = var.sequential ? [] : ["apply"]
+    for_each = var.deployment_type == "sequential" ? [] : ["apply"]
     content {
       name = "Apply"
       dynamic "action" {
@@ -146,7 +146,7 @@ resource "aws_codepipeline" "this" {
   }
 
   dynamic "stage" {
-    for_each = var.sequential ? var.accounts : {}
+    for_each = var.deployment_type == "sequential" ? var.accounts : {}
     content {
       name = stage.key
 
