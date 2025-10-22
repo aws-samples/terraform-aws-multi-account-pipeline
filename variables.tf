@@ -79,7 +79,7 @@ variable "deployment_type" {
   type        = string
   default     = "parallel"
   validation {
-    condition     = contains(["parallel", "sequential"], var.mode)
+    condition     = contains(["parallel", "sequential"], var.deployment_type)
     error_message = "The pipeline mode must be 'parallel' or 'sequential'"
   }
 }
