@@ -77,6 +77,7 @@ module "pipeline" {
 module "pipeline" {
   ...
   branch                = "main"
+  deployment_type       = "parallel"
   mode                  = "SUPERSEDED"
   detect_changes        = false
   kms_key               = aws_kms_key.this.arn
