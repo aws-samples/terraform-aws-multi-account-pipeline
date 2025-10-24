@@ -37,7 +37,7 @@ AWS CodeCommit:
 ```hcl
 module "pipeline" {
   source        = "aws-samples/multi-account-pipeline/aws"
-  version       = "1.5.x"
+  version       = "1.6.x"
   pipeline_name = "pipeline"
   repo          = aws_repository.this.repository_name
   accounts      = {
@@ -51,7 +51,7 @@ Third-party service:
 ```hcl
 module "pipeline" {
   source        = "aws-samples/multi-account-pipeline/aws"
-  version       = "1.5.x"
+  version       = "1.6.x"
   pipeline_name = "pipeline"
   repo          = "organization/repo"
   connection    = aws_codestarconnections_connection.this.arn
@@ -77,6 +77,7 @@ module "pipeline" {
 module "pipeline" {
   ...
   branch                = "main"
+  deployment_type       = "parallel"
   mode                  = "SUPERSEDED"
   detect_changes        = false
   kms_key               = aws_kms_key.this.arn

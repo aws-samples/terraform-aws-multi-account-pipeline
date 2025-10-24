@@ -49,13 +49,110 @@ resource "aws_codepipeline" "this" {
       }
     }
   }
+  dynamic "stage" {
+    for_each = var.deployment_type == "sequential" ? [] : ["plan"]
+    content {
+      name = "Plan"
+      dynamic "action" {
+        for_each = var.accounts
+        content {
+          name            = action.key
+          category        = "Build"
+          owner           = "AWS"
+          provider        = "CodeBuild"
+          input_artifacts = ["source_output"]
+          version         = "1"
+          run_order       = 1
+          configuration = {
+            ProjectName = module.plan.codebuild_project.name
+            EnvironmentVariables = jsonencode([
+              {
+                name  = "WORKSPACE"
+                value = action.value
+                type  = "PLAINTEXT"
+              },
+              {
+                name  = "ACCOUNT_NAME"
+                value = action.key
+                type  = "PLAINTEXT"
+              },
+              {
+                name  = "TF_VAR_account_id"
+                value = action.value
+                type  = "PLAINTEXT"
+              },
+              {
+                name  = "TF_VAR_account_name"
+                value = action.key
+                type  = "PLAINTEXT"
+            }])
+          }
+        }
+      }
+      action {
+        name      = "Approval"
+        category  = "Approval"
+        owner     = "AWS"
+        provider  = "Manual"
+        version   = "1"
+        run_order = 2
+        configuration = {
+          CustomData = "This action will approve the deployment of resources in ${var.pipeline_name}. Please review the plan action before approving."
+        }
+      }
+    }
+  }
 
-  stage {
-    name = "Plan"
-    dynamic "action" {
-      for_each = var.accounts
-      content {
-        name            = action.key
+  dynamic "stage" {
+    for_each = var.deployment_type == "sequential" ? [] : ["apply"]
+    content {
+      name = "Apply"
+      dynamic "action" {
+        for_each = var.accounts
+        content {
+          name            = action.key
+          category        = "Build"
+          owner           = "AWS"
+          provider        = "CodeBuild"
+          input_artifacts = ["source_output"]
+          version         = "1"
+          run_order       = 1
+          configuration = {
+            ProjectName = module.apply.codebuild_project.name
+            EnvironmentVariables = jsonencode([
+              {
+                name  = "WORKSPACE"
+                value = action.value
+                type  = "PLAINTEXT"
+              },
+              {
+                name  = "ACCOUNT_NAME"
+                value = action.key
+                type  = "PLAINTEXT"
+              },
+              {
+                name  = "TF_VAR_account_id"
+                value = action.value
+                type  = "PLAINTEXT"
+              },
+              {
+                name  = "TF_VAR_account_name"
+                value = action.key
+                type  = "PLAINTEXT"
+            }])
+          }
+        }
+      }
+    }
+  }
+
+  dynamic "stage" {
+    for_each = var.deployment_type == "sequential" ? var.accounts : {}
+    content {
+      name = stage.key
+
+      action {
+        name            = "Plan"
         category        = "Build"
         owner           = "AWS"
         provider        = "CodeBuild"
@@ -67,78 +164,75 @@ resource "aws_codepipeline" "this" {
           EnvironmentVariables = jsonencode([
             {
               name  = "WORKSPACE"
-              value = action.value
+              value = stage.value
               type  = "PLAINTEXT"
             },
             {
               name  = "ACCOUNT_NAME"
-              value = action.key
+              value = stage.key
               type  = "PLAINTEXT"
             },
             {
               name  = "TF_VAR_account_id"
-              value = action.value
+              value = stage.value
               type  = "PLAINTEXT"
             },
             {
               name  = "TF_VAR_account_name"
-              value = action.key
+              value = stage.key
               type  = "PLAINTEXT"
           }])
         }
       }
-    }
-    action {
-      name      = "Approval"
-      category  = "Approval"
-      owner     = "AWS"
-      provider  = "Manual"
-      version   = "1"
-      run_order = 2
-      configuration = {
-        CustomData = "This action will approve the deployment of resources in ${var.pipeline_name}. Please review the plan action before approving."
-      }
-    }
-  }
 
-  stage {
-    name = "Apply"
-    dynamic "action" {
-      for_each = var.accounts
-      content {
-        name            = action.key
+      action {
+        name      = "Approval"
+        category  = "Approval"
+        owner     = "AWS"
+        provider  = "Manual"
+        version   = "1"
+        run_order = 2
+        configuration = {
+          CustomData = "This action will approve the deployment of resources in ${var.pipeline_name}. Please review the plan action before approving."
+        }
+      }
+
+      action {
+        name            = "Apply"
         category        = "Build"
         owner           = "AWS"
         provider        = "CodeBuild"
         input_artifacts = ["source_output"]
         version         = "1"
+        run_order       = 3
         configuration = {
           ProjectName = module.apply.codebuild_project.name
           EnvironmentVariables = jsonencode([
             {
               name  = "WORKSPACE"
-              value = action.value
+              value = stage.value
               type  = "PLAINTEXT"
             },
             {
               name  = "ACCOUNT_NAME"
-              value = action.key
+              value = stage.key
               type  = "PLAINTEXT"
             },
             {
               name  = "TF_VAR_account_id"
-              value = action.value
+              value = stage.value
               type  = "PLAINTEXT"
             },
             {
               name  = "TF_VAR_account_name"
-              value = action.key
+              value = stage.key
               type  = "PLAINTEXT"
           }])
         }
       }
     }
   }
+
 }
 
 resource "aws_iam_role" "codepipeline" {
