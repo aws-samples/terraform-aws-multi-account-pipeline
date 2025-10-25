@@ -3,7 +3,7 @@
 
 variable "accounts" {
   description = "AWS account names and IDs"
-  type        = map(string)
+  type        = any
 }
 
 variable "pipeline_name" {
