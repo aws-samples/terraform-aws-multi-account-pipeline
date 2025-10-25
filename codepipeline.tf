@@ -147,7 +147,7 @@ resource "aws_codepipeline" "this" {
   }
 
   dynamic "stage" {
-    for_each = var.deployment_type == "sequential" ? var.accounts : {}
+    for_each = var.accounts == type(list) ? var.accounts : []
     content {
       name = stage.key
 
