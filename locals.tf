@@ -12,6 +12,13 @@ locals {
     tags = "aws/codebuild/amazonlinux2-x86_64-standard:5.0"
   })
 
+  ordered_accounts = length(var.sequential) > 0 ? [
+    for name in var.sequential : {
+      name = name
+      account_id = var.accounts[name]
+    }
+  ] : []
+
   env_var = {
     CHECKOV_SKIPS       = join(",", "${var.checkov_skip}")
     CHECKOV_VERSION     = var.checkov_version

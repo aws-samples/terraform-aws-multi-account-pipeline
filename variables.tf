@@ -74,16 +74,6 @@ variable "codebuild_policy" {
   default     = null
 }
 
-variable "deployment_type" {
-  description = "deployment type, parallel or sequential"
-  type        = string
-  default     = "parallel"
-  validation {
-    condition     = contains(["parallel", "sequential"], var.deployment_type)
-    error_message = "The pipeline mode must be 'parallel' or 'sequential'"
-  }
-}
-
 variable "detect_changes" {
   description = "allows third-party servicesm like GitHub to invoke the pipeline"
   type        = bool
@@ -124,6 +114,12 @@ variable "notifications" {
     detail_type = string
   })
   default = null
+}
+
+variable "sequential" {
+  description = "list of account names in sequential deployment order"
+  type        = list(string)
+  default     = []
 }
 
 variable "tags" {

@@ -49,8 +49,10 @@ resource "aws_codepipeline" "this" {
       }
     }
   }
+
+  // parallel
   dynamic "stage" {
-    for_each = var.deployment_type == "sequential" ? [] : ["plan"]
+    for_each = length(var.sequential) == 0 ? ["plan"] : []
     content {
       name = "Plan"
       dynamic "action" {
@@ -102,9 +104,8 @@ resource "aws_codepipeline" "this" {
       }
     }
   }
-
   dynamic "stage" {
-    for_each = var.deployment_type == "sequential" ? [] : ["apply"]
+    for_each = length(var.sequential) == 0 ? ["apply"] : []
     content {
       name = "Apply"
       dynamic "action" {
@@ -146,10 +147,11 @@ resource "aws_codepipeline" "this" {
     }
   }
 
+  // sequential
   dynamic "stage" {
-    for_each = var.deployment_type == "sequential" ? var.accounts : {}
+    for_each = local.ordered_accounts
     content {
-      name = stage.key
+      name = stage.value.name
 
       action {
         name            = "Plan"
@@ -164,22 +166,22 @@ resource "aws_codepipeline" "this" {
           EnvironmentVariables = jsonencode([
             {
               name  = "WORKSPACE"
-              value = stage.value
+              value = stage.value.account_id
               type  = "PLAINTEXT"
             },
             {
               name  = "ACCOUNT_NAME"
-              value = stage.key
+              value = stage.value.name
               type  = "PLAINTEXT"
             },
             {
               name  = "TF_VAR_account_id"
-              value = stage.value
+              value = stage.value.account_id
               type  = "PLAINTEXT"
             },
             {
               name  = "TF_VAR_account_name"
-              value = stage.key
+              value = stage.value.name
               type  = "PLAINTEXT"
           }])
         }
@@ -210,22 +212,22 @@ resource "aws_codepipeline" "this" {
           EnvironmentVariables = jsonencode([
             {
               name  = "WORKSPACE"
-              value = stage.value
+              value = stage.value.account_id
               type  = "PLAINTEXT"
             },
             {
               name  = "ACCOUNT_NAME"
-              value = stage.key
+              value = stage.value.name
               type  = "PLAINTEXT"
             },
             {
               name  = "TF_VAR_account_id"
-              value = stage.value
+              value = stage.value.account_id
               type  = "PLAINTEXT"
             },
             {
               name  = "TF_VAR_account_name"
-              value = stage.key
+              value = stage.value.name
               type  = "PLAINTEXT"
           }])
         }
