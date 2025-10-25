@@ -149,9 +149,9 @@ resource "aws_codepipeline" "this" {
 
   // sequential
   dynamic "stage" {
-    for_each = length(var.sequential) > 0 ? local.ordered_accounts : {}
+    for_each = local.ordered_accounts
     content {
-      name = "${stage.value.name}-${stage.key}"
+      name = stage.value.name
 
       action {
         name            = "Plan"
