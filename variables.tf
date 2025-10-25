@@ -119,7 +119,7 @@ variable "notifications" {
 variable "sequential" {
   description = "list of account names in sequential deployment order"
   type        = list(string)
-  default     = []
+  default     = null
 }
 
 variable "tags" {
