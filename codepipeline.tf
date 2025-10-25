@@ -149,7 +149,7 @@ resource "aws_codepipeline" "this" {
 
   // sequential
   dynamic "stage" {
-    for_each = local.is_sequential ? local.ordered_accounts : {}
+    for_each = var.sequential != [] ? local.ordered_accounts : {}
     content {
       name = stage.key
 
