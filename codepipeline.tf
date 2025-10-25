@@ -49,12 +49,14 @@ resource "aws_codepipeline" "this" {
       }
     }
   }
+
+  // parallel
   dynamic "stage" {
     for_each = local.is_sequential ? [] : ["plan"]
     content {
       name = "Plan"
       dynamic "action" {
-        for_each = local.ordered_accounts
+        for_each = var.accounts
         content {
           name            = action.key
           category        = "Build"
@@ -102,13 +104,12 @@ resource "aws_codepipeline" "this" {
       }
     }
   }
-
   dynamic "stage" {
     for_each = local.is_sequential ? [] : ["apply"]
     content {
       name = "Apply"
       dynamic "action" {
-        for_each = local.ordered_accounts
+        for_each = var.accounts
         content {
           name            = action.key
           category        = "Build"
@@ -146,6 +147,7 @@ resource "aws_codepipeline" "this" {
     }
   }
 
+  // sequential
   dynamic "stage" {
     for_each = local.is_sequential ? local.ordered_accounts : {}
     content {
