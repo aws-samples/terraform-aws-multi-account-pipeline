@@ -13,7 +13,10 @@ locals {
   })
 
   ordered_accounts = length(var.sequential) > 0 ? {
-    for name in var.sequential : name => var.accounts[name]
+    for idx, name in var.sequential : idx => {
+      name = name
+      account_id = var.accounts[name]
+    }
   } : {}
 
   env_var = {

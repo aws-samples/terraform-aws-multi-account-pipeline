@@ -151,7 +151,7 @@ resource "aws_codepipeline" "this" {
   dynamic "stage" {
     for_each = length(var.sequential) > 0 ? local.ordered_accounts : {}
     content {
-      name = stage.key
+      name = "${stage.value.name}-${stage.key}"
 
       action {
         name            = "Plan"
@@ -166,22 +166,22 @@ resource "aws_codepipeline" "this" {
           EnvironmentVariables = jsonencode([
             {
               name  = "WORKSPACE"
-              value = stage.value
+              value = stage.value.account_id
               type  = "PLAINTEXT"
             },
             {
               name  = "ACCOUNT_NAME"
-              value = stage.key
+              value = stage.value.name
               type  = "PLAINTEXT"
             },
             {
               name  = "TF_VAR_account_id"
-              value = stage.value
+              value = stage.value.account_id
               type  = "PLAINTEXT"
             },
             {
               name  = "TF_VAR_account_name"
-              value = stage.key
+              value = stage.value.name
               type  = "PLAINTEXT"
           }])
         }
@@ -212,22 +212,22 @@ resource "aws_codepipeline" "this" {
           EnvironmentVariables = jsonencode([
             {
               name  = "WORKSPACE"
-              value = stage.value
+              value = stage.value.account_id
               type  = "PLAINTEXT"
             },
             {
               name  = "ACCOUNT_NAME"
-              value = stage.key
+              value = stage.value.name
               type  = "PLAINTEXT"
             },
             {
               name  = "TF_VAR_account_id"
-              value = stage.value
+              value = stage.value.account_id
               type  = "PLAINTEXT"
             },
             {
               name  = "TF_VAR_account_name"
-              value = stage.key
+              value = stage.value.name
               type  = "PLAINTEXT"
           }])
         }
