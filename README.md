@@ -60,8 +60,6 @@ module "pipeline" {
     "workload2" = "223344556677"
     "workload3" = "334455667788"
   }
-  # Optional: For sequential deployment in specific order
-  # sequential = ["workload1", "workload2", "workload3"]
 }
 ```
 
