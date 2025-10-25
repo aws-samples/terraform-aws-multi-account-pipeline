@@ -50,11 +50,11 @@ resource "aws_codepipeline" "this" {
     }
   }
   dynamic "stage" {
-    for_each = var.deployment_type == "sequential" ? [] : ["plan"]
+    for_each = local.is_sequential ? [] : ["plan"]
     content {
       name = "Plan"
       dynamic "action" {
-        for_each = var.accounts
+        for_each = local.ordered_accounts
         content {
           name            = action.key
           category        = "Build"
@@ -104,11 +104,11 @@ resource "aws_codepipeline" "this" {
   }
 
   dynamic "stage" {
-    for_each = var.deployment_type == "sequential" ? [] : ["apply"]
+    for_each = local.is_sequential ? [] : ["apply"]
     content {
       name = "Apply"
       dynamic "action" {
-        for_each = var.accounts
+        for_each = local.ordered_accounts
         content {
           name            = action.key
           category        = "Build"
@@ -147,7 +147,7 @@ resource "aws_codepipeline" "this" {
   }
 
   dynamic "stage" {
-    for_each = var.deployment_type == "sequential" ? var.accounts : {}
+    for_each = local.is_sequential ? local.ordered_accounts : {}
     content {
       name = stage.key
 

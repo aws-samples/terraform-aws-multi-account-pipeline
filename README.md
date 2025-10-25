@@ -60,6 +60,8 @@ module "pipeline" {
     "workload2" = "223344556677"
     "workload3" = "334455667788"
   }
+  # Optional: For sequential deployment in specific order
+  # sequential = ["workload1", "workload2", "workload3"]
 }
 ```
 
@@ -69,7 +71,24 @@ module "pipeline" {
 
 `accounts` is a map of the target AWS accounts. 
 
-`connection` is the connection arn of the [connection](https://docs.aws.amazon.com/dtconsole/latest/userguide/welcome-connections.html) to the third-party repo. 
+`connection` is the connection arn of the [connection](https://docs.aws.amazon.com/dtconsole/latest/userguide/welcome-connections.html) to the third-party repo.
+
+### Sequential Deployment
+By default, the pipeline deploys terraform to AWS accounts in parallel. To deploy terraform sequentially (Eg dev -> test -> prod), use the `sequential` input:
+
+```hcl
+module "pipeline" {
+  ... 
+  accounts   = {
+    "dev"  = "112233445566"
+    "test" = "223344556677"
+    "prod" = "334455667788"
+  }
+  sequential = ["dev", "test", "prod"]
+}
+```
+
+`sequential` is an ordered list of the AWS accounts in `accounts`. 
 
 ### Optional Inputs
 
@@ -77,7 +96,6 @@ module "pipeline" {
 module "pipeline" {
   ...
   branch                = "main"
-  deployment_type       = "parallel"
   mode                  = "SUPERSEDED"
   detect_changes        = false
   kms_key               = aws_kms_key.this.arn
