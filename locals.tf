@@ -14,7 +14,7 @@ locals {
 
   ordered_accounts = length(var.sequential) > 0 ? [
     for name in var.sequential : {
-      name = name
+      name       = name
       account_id = var.accounts[name]
     }
   ] : []
