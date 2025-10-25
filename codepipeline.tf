@@ -52,7 +52,7 @@ resource "aws_codepipeline" "this" {
 
   // parallel
   dynamic "stage" {
-    for_each = var.sequential == [] ? ["plan"] : []
+    for_each = length(var.sequential) == 0 ? ["plan"] : []
     content {
       name = "Plan"
       dynamic "action" {
@@ -105,7 +105,7 @@ resource "aws_codepipeline" "this" {
     }
   }
   dynamic "stage" {
-    for_each = var.sequential == [] ? ["apply"] : []
+    for_each = length(var.sequential) == 0 ? ["apply"] : []
     content {
       name = "Apply"
       dynamic "action" {
@@ -149,7 +149,7 @@ resource "aws_codepipeline" "this" {
 
   // sequential
   dynamic "stage" {
-    for_each = var.sequential != [] ? local.ordered_accounts : {}
+    for_each = length(var.sequential) > 0 ? local.ordered_accounts : {}
     content {
       name = stage.key
 
