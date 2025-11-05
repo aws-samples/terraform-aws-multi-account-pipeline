@@ -2,7 +2,8 @@
 
 ## Paralell Deployment (default)
 
-![image info](./img/paralell.png)
+![image info](../img/paralell.png)
+
 
 1. **(1a)** User commits to a third-party repository, this invokes the AWS Codepipeline pipeline; *or* **(1b)** User commits to a CodeCommit repository, this invokes an Amazon EventBridge rule, which runs the pipeline. 
 2. The pipeline validates the code and then runs a terraform plan against all of the target AWS accounts. Manual approval is then required to run the terraform apply. 
@@ -12,7 +13,7 @@
 
 ## Sequential Deployment
 
-![image info](./img/sequential.png)
+![image info](../img/sequential.png)
 
 1. **(1a)** User commits to a third-party repository, this invokes the AWS Codepipeline pipeline; *or* **(1b)** User commits to a CodeCommit repository, this invokes an Amazon EventBridge rule, which runs the pipeline. 
 2. The pipeline validates the code and then progresses through the various stages (Dev then Prod in the above image). Each stage has a plan, approval, and apply. 
