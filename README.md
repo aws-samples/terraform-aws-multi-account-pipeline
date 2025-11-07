@@ -150,7 +150,6 @@ See [optional inputs](./docs/optional_inputs.md) for descriptions.
 - [Optional inputs](./docs/optional_inputs.md)
 - [Architecture](./docs/architecture.md)
 - [Troubleshooting](./docs/troubleshooting.md)
-- [Best practices](./docs/best_practices.md) 
 
 ## Related Resources
 
