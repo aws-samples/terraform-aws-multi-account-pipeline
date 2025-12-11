@@ -14,7 +14,7 @@ terraform {
 provider "aws" {
   region = ""
   assume_role {
-    role_arn     = "arn:aws:iam::${var.account_id}:role/<cross-account-role>" #replace this with your cross account role name
-    session_name = ""
+    role_arn     = "arn:aws:iam::${var.account_id}:role/sandbox-cross-account"
+    session_name = "sdmp"
   }
 }
