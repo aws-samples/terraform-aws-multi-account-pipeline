@@ -1,6 +1,6 @@
 # Architecture
 
-## Paralell Deployment (default)
+## Parallel Deployment (default)
 
 ![image info](../img/paralell.png)
 
@@ -26,7 +26,7 @@
 | Check | Description |
 |---|---|
 | validate | runs `terraform validate` to make sure that the code is syntactically valid. |
-| lint | runs [tfLint](https://github.com/terraform-linters/tflint) which will find errors, depreciated syntax, and check naming conventions. |
+| lint | runs [tfLint](https://github.com/terraform-linters/tflint) which will find errors, deprecated syntax, and check naming conventions. |
 | fmt | runs `terraform fmt --recursive --check` to ensure code is consistently formatted. |
 | sast | runs [checkov](https://www.checkov.io/) for security best practices. |
 | tags (optional)| runs [tag-nag](https://github.com/jakebark/tag-nag) to validate tags.|

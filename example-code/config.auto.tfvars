@@ -21,7 +21,7 @@ config = {
 
   "334455667788" = {
     owner = "eve"
-    cidr  = "10.22.300.0/16"
+    cidr  = "10.22.0.0/16"
   }
 
   # alternative referencing
@@ -38,7 +38,7 @@ config = {
 
   # "workload3" = {
   #   owner = "eve"
-  #   cidr  = "10.22.300.0/16"
+  #   cidr  = "10.22.0.0/16"
   # }
 
 }

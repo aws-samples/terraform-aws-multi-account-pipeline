@@ -65,7 +65,7 @@ variable "checkov_skip" {
 
 variable "checkov_version" {
   type    = string
-  default = "3.2.0"
+  default = "3.2.507"
 }
 
 variable "codebuild_policy" {
@@ -75,7 +75,7 @@ variable "codebuild_policy" {
 }
 
 variable "detect_changes" {
-  description = "allows third-party servicesm like GitHub to invoke the pipeline"
+  description = "allows third-party services like GitHub to invoke the pipeline"
   type        = bool
   default     = false
 }
@@ -130,17 +130,17 @@ variable "tags" {
 
 variable "tagnag_version" {
   type    = string
-  default = "0.7.9"
+  default = "0.8.5"
 }
 
 variable "terraform_version" {
   type    = string
-  default = "1.8.0"
+  default = "1.14.0"
 }
 
 variable "tflint_version" {
   type    = string
-  default = "0.55.0"
+  default = "0.61.0"
 }
 
 variable "workspace_directory" {
