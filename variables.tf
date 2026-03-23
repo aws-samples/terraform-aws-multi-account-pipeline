@@ -65,7 +65,7 @@ variable "checkov_skip" {
 
 variable "checkov_version" {
   type    = string
-  default = "3.2.507"
+  default = "3.2.0"
 }
 
 variable "codebuild_policy" {
@@ -135,7 +135,7 @@ variable "tagnag_version" {
 
 variable "terraform_version" {
   type    = string
-  default = "1.14.0"
+  default = "1.12.0"
 }
 
 variable "tflint_version" {
